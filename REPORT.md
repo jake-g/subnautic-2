@@ -65,7 +65,6 @@ access-control-expose-headers: x-sentry-error,x-sentry-rate-limits,retry-after
 * **Local Engine Log Dump**: [Subnautica2.log](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups/Subnautica2.log)
 * **Local Backups Vault**: [backups/](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups)
 * **Developer Toolkit**: [Makefile](file:///Users/jakegarrison/Downloads/projects/subnautica-2/Makefile)
-* **Scraper Automation**: [subnautica_scraper.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/subnautica_scraper.py)
-* **File Sync Engine**: [sync_remote_vault.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/sync_remote_vault.py)
+* **Unified Toolkit**: [subnautica_scraper.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/subnautica_scraper.py)
 * **Project Changelog**: [CHANGELOG.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/CHANGELOG.md)
 * **Official Website**: [subnautica.com](https://subnautica.com)

@@ -3,7 +3,6 @@
 PC_SSH ?= jake@192.168.0.100
 REMOTE_SAVE_ROOT ?= C:/Users/jake/AppData/Local/Subnautica2/Saved
 LOCAL_SCRIPT ?= subnautica_scraper.py
-SYNC_SCRIPT ?= sync_remote_vault.py
 
 .PHONY: help report status configs pull push pull-saves push-saves sync format decode git-status git-log git-diff snapshot ssh logs tail
 
@@ -50,11 +49,11 @@ configs:
 
 pull pull-saves:
 	@echo "-> Pulling remote Unreal Engine save games and configs locally..."
-	python3 $(SYNC_SCRIPT) --pull
+	python3 $(LOCAL_SCRIPT) --pull
 
 push push-saves:
 	@echo "-> Pushing local backup vault to gaming rig..."
-	python3 $(SYNC_SCRIPT) --push
+	python3 $(LOCAL_SCRIPT) --push
 
 sync: pull
 	@echo "-> Vault synchronization completed."
@@ -86,7 +85,7 @@ tail:
 
 format decode:
 	@echo "-> Formatting progression markdown guides and decoding backup save files..."
-	python3 decode_sav.py
+	python3 $(LOCAL_SCRIPT) --decode
 	@make report
 
 ssh:

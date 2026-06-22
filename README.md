@@ -78,9 +78,7 @@ Catalog of progression registers and config parameters to distinguish between li
 ## Structure
 | File | Description |
 | :--- | :--- |
-| [subnautica_scraper.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/subnautica_scraper.py) | Main telemetry scraper and diagnostic report generator. |
-| [decode_sav.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/decode_sav.py) | Unreal Engine 5 SaveGame binary decoder. |
-| [sync_remote_vault.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/sync_remote_vault.py) | Bi-directional base64 file synchronization bridge over SSH. |
+| [subnautica_scraper.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/subnautica_scraper.py) | Unified telemetry scraper, vault sync engine, and binary save decoder. |
 | [Makefile](file:///Users/jakegarrison/Downloads/projects/subnautica-2/Makefile) | Developer CLI automation targets. |
 | [REPORT.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/REPORT.md) | Generated live progression telemetry and game settings report. |
 | [CHANGELOG.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/CHANGELOG.md) | Chronological ledger recording developer milestones. |

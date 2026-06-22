@@ -1,16 +1,19 @@
-"""Subnautica 2 Telemetry Scraper and Master Coaching Guide Generator.
+"""Subnautica 2 Unified Telemetry Scraper, File Sync, and Save Decoder.
 
-Connects to the remote Windows gaming PC over SSH, runs the standalone
-subnautica_telemetry.py script inside the remote Git repository, and updates
-the local subnautica.md master coaching guide and progression report.
+Connects to the remote Windows gaming PC over SSH, scrapes live progression
+telemetry, synchronizes binary SaveGames and INI configs flat into backups/,
+decodes binary .sav files into markdown progression guides, and updates REPORT.md.
 """
 
+import argparse
+import base64
 import datetime
 import json
 import os
+import re
 import subprocess
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 PC_SSH_HOST = "jake@192.168.0.100"
 REMOTE_SAVE_DIR = "C:/Users/jake/AppData/Local/Subnautica2/Saved"
@@ -21,16 +24,357 @@ REPORT_PATH = os.path.join(WORKSPACE_ROOT, "REPORT.md")
 BACKUP_DIR = os.path.join(WORKSPACE_ROOT, "backups")
 PREV_CHAT_PATH = os.path.join(BACKUP_DIR, "subnuatica_2_previous_chat.md")
 LOCAL_LOG_PATH = os.path.join(BACKUP_DIR, "Subnautica2.log")
-SAVE_VAULT_PATH = BACKUP_DIR
-CONFIG_VAULT_PATH = BACKUP_DIR
+
+# Boilerplate UE5 serialization noise to strip out during decoding
+UE_NOISE = {
+    "property",
+    "guid",
+    "coreuobject",
+    "engine",
+    "vector",
+    "rotator",
+    "transform",
+    "quat",
+    "multicast",
+    "delegate",
+    "interface",
+    "map",
+    "set",
+    "byte",
+    "int",
+    "float",
+    "bool",
+    "str",
+    "name",
+    "array",
+    "struct",
+    "object",
+    "none",
+    "default",
+    "root",
+    "class",
+    "package",
+    "world",
+    "level",
+}
+
+REMOTE_PULL_SCRIPT = """
+import os
+import base64
+import json
+
+save_dir = 'C:/Users/jake/AppData/Local/Subnautica2/Saved/SaveGames'
+cfg_root = 'C:/Users/jake/AppData/Local/Subnautica2/Saved'
+
+payload = {'saves': {}, 'configs': {}}
+
+if os.path.exists(save_dir):
+  for f in os.listdir(save_dir):
+    if f.startswith('savegame_') and f.endswith('.sav'):
+      p = os.path.join(save_dir, f)
+      if os.path.isfile(p):
+        raw = open(p, 'rb').read()
+        payload['saves'][f] = base64.b64encode(raw).decode('ascii')
+
+for sub in ['Config/Windows', 'ImGui']:
+  d = os.path.join(cfg_root, sub)
+  if os.path.exists(d):
+    for f in os.listdir(d):
+      if any(f.endswith(ext) for ext in ['.ini', '.json', '.cfg']) and 'UWESaveSystem' not in f:
+        p = os.path.join(d, f)
+        if os.path.isfile(p):
+          payload['configs'][f] = open(p, 'r', errors='ignore').read()
+
+print(json.dumps(payload))
+"""
+
+
+# ==============================================================================
+# SaveGame Binary Decoding Logic
+# ==============================================================================
+
+
+def is_junk_string(text: str) -> bool:
+  """Evaluates whether an ASCII string is binary serialization noise."""
+  s_str = text.strip()
+  if len(s_str) < 4:
+    return True
+  if any(char * 3 in s_str for char in "/.-*+!#$&_=:?~"):
+    return True
+  low = s_str.lower()
+  if any(noise == low for noise in UE_NOISE):
+    return True
+  if low.startswith("ue4") or low.startswith("ue5"):
+    return True
+  alnum_count = sum(c.isalnum() for c in s_str)
+  if alnum_count / len(s_str) < 0.65:
+    return True
+  return False
+
+
+def clean_game_string(text: str) -> str:
+  """Cleans prefix asset paths for clean presentation."""
+  cleaned = re.sub(r"^.*(?:/Game/|/Script/|/Data/|/Blueprints/)", "", text)
+  cleaned = cleaned.strip("_ ").replace("_", " ")
+  return cleaned
+
+
+def decode_binary_sav(sav_path: str) -> Dict[str, Any]:
+  """Decodes binary Unreal save file into clean gameplay dict."""
+  if not os.path.exists(sav_path):
+    raise FileNotFoundError(f"Binary save file not found: {sav_path}")
+
+  with open(sav_path, "rb") as f:
+    raw = f.read()
+
+  file_size = len(raw)
+  matches = re.findall(b"[a-zA-Z0-9_/ -.:]{4,}", raw)
+  decoded = set()
+  for m in matches:
+    try:
+      s = m.decode("ascii").strip()
+      if not is_junk_string(s):
+        decoded.add(s)
+    except Exception:
+      pass
+
+  categories: Dict[str, List[str]] = {
+      "survival_gear_and_tools": [],
+      "constructed_base_modules": [],
+      "map_zones_and_pois": [],
+      "blueprints_and_pda": [],
+      "narrative_and_radio_quests": [],
+  }
+
+  for s in sorted(list(decoded)):
+    low = s.lower()
+    if any(
+        k in low
+        for k in [
+            "titanium",
+            "copper",
+            "quartz",
+            "silver",
+            "lead",
+            "glass",
+            "wire",
+            "medkit",
+            "battery",
+            "tank",
+            "seaglide",
+            "scanner",
+            "builder",
+            "flashlight",
+            "flare",
+            "rebreather",
+            "knife",
+            "o2",
+        ]
+    ):
+      categories["survival_gear_and_tools"].append(s)
+    elif any(
+        k in low
+        for k in [
+            "hatch",
+            "locker",
+            "solarpanel",
+            "biobed",
+            "stackedroom",
+            "corridor",
+            "vehiclebay",
+            "foundation",
+            "fabricator",
+        ]
+    ):
+      categories["constructed_base_modules"].append(s)
+    elif any(
+        k in low
+        for k in [
+            "/game/maps/",
+            "basecamp",
+            "campone",
+            "shallow",
+            "kelp",
+            "thermal",
+            "garden",
+            "crevasse",
+            "lifepod",
+            "outpost",
+        ]
+    ):
+      categories["map_zones_and_pois"].append(s)
+    elif "blueprint" in low or "unlocked" in low or "techtype" in low:
+      categories["blueprints_and_pda"].append(s)
+    elif any(
+        k in low
+        for k in ["signal", "storygoal", "radio", "transmission", "blackbox"]
+    ):
+      categories["narrative_and_radio_quests"].append(s)
+
+  clean_categories: Dict[str, List[str]] = {}
+  for cat, items in categories.items():
+    cleaned_set = sorted(list(set(clean_game_string(it) for it in items)))
+    clean_categories[cat] = [it for it in cleaned_set if len(it) >= 3][:60]
+
+  return {
+      "source_file": os.path.basename(sav_path),
+      "size_bytes": file_size,
+      "meaningful_gameplay_records": sum(len(v) for v in clean_categories.values()),
+      "progression_telemetry": clean_categories,
+  }
+
+
+def write_markdown_guide(data: Dict[str, Any], out_path: str) -> str:
+  """Writes clean Markdown progression report."""
+  with open(out_path, "w", encoding="utf-8") as f:
+    f.write(f"# Subnautica 2 Progression Dump (`{data['source_file']}`)\n\n")
+    f.write("> [!NOTE]\n")
+    f.write(
+        f"> **Binary Save Geometry**: Decoded from `{data['source_file']}`"
+        f" ({data['size_bytes']:,} bytes). Filtered out raw engine serialization"
+        " artifacts. Total high-fidelity gameplay progression records extracted:"
+        f" **{data['meaningful_gameplay_records']:,}**.\n\n"
+    )
+
+    for cat_name, items in data["progression_telemetry"].items():
+      title = cat_name.replace("_", " ").title()
+      f.write(f"## {title} (`{len(items)}` detected)\n\n")
+      if not items:
+        f.write("*None Detected*\n\n")
+      else:
+        f.write("| Extracted Gameplay Register | Domain Classification |\n")
+        f.write("| :--- | :--- |\n")
+        for it in items:
+          clean_it = it.replace("|", "&#124;")
+          f.write(f"| `{clean_it}` | {title} |\n")
+        f.write("\n")
+
+  return out_path
+
+
+def decode_all_saves() -> List[str]:
+  """Crawls backups directory and decodes all savegame_*.sav files."""
+  if not os.path.exists(BACKUP_DIR):
+    print(f"Backup folder not found: {BACKUP_DIR}")
+    return []
+
+  results = []
+  for f in sorted(os.listdir(BACKUP_DIR)):
+    if f.startswith("savegame_") and f.endswith(".sav"):
+      sav_p = os.path.join(BACKUP_DIR, f)
+      decoded = decode_binary_sav(sav_p)
+      base_out = os.path.join(BACKUP_DIR, os.path.splitext(f)[0] + "_decoded.md")
+      md_p = write_markdown_guide(decoded, base_out)
+      results.append(md_p)
+
+  print(f"-> Successfully decoded {len(results)} binary save files in backups/.")
+  return results
+
+
+# ==============================================================================
+# Remote Vault Synchronization (Pull / Push)
+# ==============================================================================
+
+
+def execute_pull() -> None:
+  """Pulls remote save games and configs flat into local backup vault."""
+  print(f"-> Connecting to remote gaming host ({PC_SSH_HOST}) for pull...")
+  process = subprocess.run(
+      ["ssh", "-o", "ConnectTimeout=6", PC_SSH_HOST, "python"],
+      input=REMOTE_PULL_SCRIPT.encode("utf-8"),
+      capture_output=True,
+      check=False,
+  )
+
+  out_str = process.stdout.decode("utf-8", errors="ignore")
+  json_start = out_str.find("{")
+  if json_start == -1:
+    err_msg = process.stderr.decode("utf-8", errors="ignore").strip()
+    raise RuntimeError(f"Pull failed. Valid JSON not returned: {err_msg}")
+
+  data = json.loads(out_str[json_start:])
+  os.makedirs(BACKUP_DIR, exist_ok=True)
+
+  saves = data.get("saves", {})
+  for fname, b64_val in saves.items():
+    raw_bytes = base64.b64decode(b64_val)
+    local_p = os.path.join(BACKUP_DIR, fname)
+    with open(local_p, "wb") as f:
+      f.write(raw_bytes)
+  print(f"-> Successfully pulled {len(saves)} master gameplay save files.")
+
+  configs = data.get("configs", {})
+  for fname, text_val in configs.items():
+    local_p = os.path.join(BACKUP_DIR, fname)
+    with open(local_p, "w", encoding="utf-8") as f:
+      f.write(text_val)
+  print(f"-> Successfully pulled {len(configs)} plaintext engine config profiles.")
+
+  print("-> Auto-decoding newly synced binary save files...")
+  decode_all_saves()
+
+
+def execute_push() -> None:
+  """Pushes flat local backup files back to remote gaming PC."""
+  if not os.path.exists(BACKUP_DIR):
+    raise ValueError("Local backup vault empty. Execute pull first.")
+
+  saves_payload: Dict[str, str] = {}
+  configs_payload: Dict[str, str] = {}
+
+  for f in os.listdir(BACKUP_DIR):
+    p = os.path.join(BACKUP_DIR, f)
+    if os.path.isfile(p):
+      if f.endswith(".sav"):
+        raw_b = open(p, "rb").read()
+        saves_payload[f] = base64.b64encode(raw_b).decode("ascii")
+      elif any(f.endswith(ext) for ext in [".ini", ".json", ".cfg"]) and not f.endswith(".md"):
+        rel_key = f"ImGui/{f}" if f == "Game.ini" else f"Config/Windows/{f}"
+        configs_payload[rel_key] = open(p, "r", encoding="utf-8").read()
+
+  push_script = f"""import os, base64
+
+save_dir = '{REMOTE_SAVE_DIR}/SaveGames'
+cfg_root = '{REMOTE_SAVE_DIR}'
+
+os.makedirs(save_dir, exist_ok=True)
+saves = {json.dumps(saves_payload)}
+for fname, b64_val in saves.items():
+  p = os.path.join(save_dir, fname)
+  open(p, 'wb').write(base64.b64decode(b64_val))
+
+configs = {json.dumps(configs_payload)}
+for rel_key, txt_val in configs.items():
+  p = os.path.join(cfg_root, rel_key)
+  os.makedirs(os.path.dirname(p), exist_ok=True)
+  open(p, 'w', encoding='utf-8').write(txt_val)
+
+print("PUSH_SUCCESS")
+"""
+
+  print(f"-> Pushing {len(saves_payload)} saves and {len(configs_payload)} configs...")
+  process = subprocess.run(
+      ["ssh", "-o", "ConnectTimeout=6", PC_SSH_HOST, "python"],
+      input=push_script.encode("utf-8"),
+      capture_output=True,
+      check=False,
+  )
+
+  out_str = process.stdout.decode("utf-8", errors="ignore")
+  if "PUSH_SUCCESS" in out_str:
+    print("-> Successfully synchronized flat local vault to remote gaming host.")
+  else:
+    err_msg = process.stderr.decode("utf-8", errors="ignore").strip()
+    raise RuntimeError(f"Remote push execution failed: {err_msg}")
+
+
+# ==============================================================================
+# Live Telemetry Scraping & REPORT.md Generation
+# ==============================================================================
 
 
 def fetch_remote_telemetry() -> Dict[str, Any]:
-  """Executes remote python script over SSH and returns parsed JSON data.
-
-  Returns:
-    Dict[str, Any]: The extracted save game telemetry dictionary.
-  """
+  """Executes remote python script over SSH and returns parsed JSON data."""
   print(f"Connecting to remote gaming PC ({PC_SSH_HOST})...")
   process = subprocess.run(
       ["ssh", "-o", "ConnectTimeout=6", PC_SSH_HOST, f"python {REMOTE_SCRIPT_PATH}"],
@@ -58,11 +402,7 @@ def fetch_remote_telemetry() -> Dict[str, Any]:
 
 
 def query_remote_git_hash() -> str:
-  """Queries the active Git commit hash of the remote save repository.
-
-  Returns:
-    str: Short Git commit hash or fallback string.
-  """
+  """Queries active Git commit hash of remote save repository."""
   cmd = f'powershell -Command "git -C \\"{REMOTE_SAVE_DIR}\\" rev-parse --short HEAD"'
   process = subprocess.run(
       ["ssh", "-o", "ConnectTimeout=5", PC_SSH_HOST, cmd],
@@ -95,15 +435,7 @@ def pull_remote_engine_log() -> None:
 
 
 def format_markdown_report(data: Dict[str, Any], git_hash: str) -> str:
-  """Synthesizes telemetry data into structured diagnostic markdown report.
-
-  Args:
-    data: Raw parsed JSON telemetry dictionary.
-    git_hash: Short Git commit hash of remote save tree.
-
-  Returns:
-    str: Formatted markdown report string.
-  """
+  """Synthesizes telemetry data into structured diagnostic markdown report."""
   save_files = data.get("save_files", [])
   main_save = next((s for s in save_files if s["name"] == "savegame_1.sav"), {})
   main_size_kb = f"{main_save.get('size', 0) / 1024:.1f} KB"
@@ -160,7 +492,6 @@ def format_markdown_report(data: Dict[str, Any], git_hash: str) -> str:
   changelog_path = os.path.join(WORKSPACE_ROOT, "CHANGELOG.md")
   makefile_path = os.path.join(WORKSPACE_ROOT, "Makefile")
   scraper_path = os.path.abspath(__file__)
-  sync_path = os.path.join(WORKSPACE_ROOT, "sync_remote_vault.py")
 
   report = f"""# Subnautica 2 Telemetry Report
 
@@ -229,26 +560,45 @@ Snapshot of diagnostic gameplay session events logged by engine:
 * **Local Engine Log Dump**: [Subnautica2.log](file://{LOCAL_LOG_PATH})
 * **Local Backups Vault**: [backups/](file://{BACKUP_DIR})
 * **Developer Toolkit**: [Makefile](file://{makefile_path})
-* **Scraper Automation**: [subnautica_scraper.py](file://{scraper_path})
-* **File Sync Engine**: [sync_remote_vault.py](file://{sync_path})
+* **Unified Toolkit**: [subnautica_scraper.py](file://{scraper_path})
 * **Project Changelog**: [CHANGELOG.md](file://{changelog_path})
 * **Official Website**: [subnautica.com](https://subnautica.com)
 """
   return report
 
 
+def execute_report() -> None:
+  """Executes live telemetry scraping and updates REPORT.md."""
+  pull_remote_engine_log()
+  telemetry = fetch_remote_telemetry()
+  git_hash = query_remote_git_hash()
+  md_content = format_markdown_report(telemetry, git_hash)
+  with open(REPORT_PATH, "w", encoding="utf-8") as f:
+    f.write(md_content)
+  print(f"-> Successfully generated fresh diagnostic report at: {REPORT_PATH}")
+
+
 def main() -> None:
-  """Main execution entrypoint for Subnautica telemetry scraper."""
+  """Main execution entrypoint for unified Subnautica telemetry scraper."""
+  parser = argparse.ArgumentParser(description="Subnautica 2 Telemetry Toolkit")
+  group = parser.add_mutually_exclusive_group(required=False)
+  group.add_argument("--report", action="store_true", help="Scrape live telemetry and update REPORT.md (default)")
+  group.add_argument("--pull", action="store_true", help="Pull remote saves and configs locally")
+  group.add_argument("--push", action="store_true", help="Push local backup vault to remote PC")
+  group.add_argument("--decode", action="store_true", help="Decode all local save files in backups/")
+
+  args = parser.parse_args()
   try:
-    pull_remote_engine_log()
-    telemetry = fetch_remote_telemetry()
-    git_hash = query_remote_git_hash()
-    md_content = format_markdown_report(telemetry, git_hash)
-    with open(REPORT_PATH, "w", encoding="utf-8") as f:
-      f.write(md_content)
-    print(f"-> Successfully generated fresh master guide at: {REPORT_PATH}")
+    if args.pull:
+      execute_pull()
+    elif args.push:
+      execute_push()
+    elif args.decode:
+      decode_all_saves()
+    else:
+      execute_report()
   except Exception as exc:
-    print(f"ERROR: Failed to update Subnautica telemetry: {exc}", file=sys.stderr)
+    print(f"ERROR: Subnautica operation failed: {exc}", file=sys.stderr)
     sys.exit(1)
 
 
