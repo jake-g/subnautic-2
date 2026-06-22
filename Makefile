@@ -4,7 +4,7 @@ PC_SSH ?= jake@192.168.0.100
 REMOTE_SAVE_ROOT ?= C:/Users/jake/AppData/Local/Subnautica2/Saved
 LOCAL_SCRIPT ?= subnautica_scraper.py
 
-.PHONY: help report status configs pull push pull-saves push-saves sync format decode git-status git-log git-diff snapshot ssh logs tail
+.PHONY: help report status configs pull push pull-saves push-saves sync format decode git-status git-log git-diff snapshot ssh logs tail test
 
 help:
 	@echo "===================================================================="
@@ -90,3 +90,7 @@ format decode:
 
 ssh:
 	@ssh $(PC_SSH)
+
+test:
+	@echo "-> Running Python test suite..."
+	python3 -m unittest subnautica_scraper_tests.py
