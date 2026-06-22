@@ -1,9 +1,9 @@
-# 🌊 Subnautica 2 Progression Dump (`savegame_1.sav`)
+# Subnautica 2 Progression Dump (`savegame_1.sav`)
 
 > [!NOTE]
 > **Binary Save Geometry**: Decoded from `savegame_1.sav` (1,024,440 bytes). Filtered out raw engine serialization artifacts. Total high-fidelity gameplay progression records extracted: **216**.
 
-## 📌 Survival Gear And Tools (`60` detected)
+## Survival Gear And Tools (`60` detected)
 
 | Extracted Gameplay Register | Domain Classification |
 | :--- | :--- |
@@ -68,7 +68,7 @@
 | `W5EquipP OxygTank Small` | Survival Gear And Tools |
 | `W5Items/EquipBP OxygenTank Small` | Survival Gear And Tools |
 
-## 📌 Constructed Base Modules (`56` detected)
+## Constructed Base Modules (`56` detected)
 
 | Extracted Gameplay Register | Domain Classification |
 | :--- | :--- |
@@ -129,7 +129,7 @@
 | `uMArt/Environment/Set/Alterra/LifepodBay Chunk Hatch` | Constructed Base Modules |
 | `w%ooDCorridor` | Constructed Base Modules |
 
-## 📌 Map Zones And Pois (`44` detected)
+## Map Zones And Pois (`44` detected)
 
 | Extracted Gameplay Register | Domain Classification |
 | :--- | :--- |
@@ -178,7 +178,7 @@
 | `oaKelp` | Map Zones And Pois |
 | `s PGNarraSignal1 Unknowneepstart OpenDBreatDeepSWorld Ch1 LifepodNoABooted` | Map Zones And Pois |
 
-## 📌 Blueprints And Pda (`28` detected)
+## Blueprints And Pda (`28` detected)
 
 | Extracted Gameplay Register | Domain Classification |
 | :--- | :--- |
@@ -211,7 +211,7 @@
 | `q'.G*Blueprints/ResourcesAcidAnem` | Blueprints And Pda |
 | `uqBlueprints/ies/Bio/Ac/GA Dash y. CbIs` | Blueprints And Pda |
 
-## 📌 Narrative And Radio Quests (`28` detected)
+## Narrative And Radio Quests (`28` detected)
 
 | Extracted Gameplay Register | Domain Classification |
 | :--- | :--- |
