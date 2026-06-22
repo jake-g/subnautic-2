@@ -1,5 +1,8 @@
 import unittest
-from subnautica_scraper import is_junk_string, clean_game_string, UE_NOISE
+
+from subnautica_scraper import clean_game_string
+from subnautica_scraper import is_junk_string
+from subnautica_scraper import UE_NOISE
 
 
 class TestSubnauticaScraper(unittest.TestCase):
@@ -20,7 +23,7 @@ class TestSubnauticaScraper(unittest.TestCase):
     self.assertTrue(is_junk_string("///"))
     self.assertTrue(is_junk_string("..."))
     self.assertTrue(is_junk_string("***"))
-    
+
     # Test prefixes
     self.assertTrue(is_junk_string("UE4_SaveGame"))
     self.assertTrue(is_junk_string("ue5_config"))
@@ -33,9 +36,12 @@ class TestSubnauticaScraper(unittest.TestCase):
   def test_clean_game_string(self):
     """Verifies prefix stripping and spacing for game assets."""
     self.assertEqual(clean_game_string("/Game/Maps/Shallow"), "Maps/Shallow")
-    self.assertEqual(clean_game_string("/Script/CoreUObject/Class"), "CoreUObject/Class")
-    self.assertEqual(clean_game_string("/Data/Blueprints/BP_Seamoth"), "BP Seamoth")
-    self.assertEqual(clean_game_string("BP_OxygenTank_Small"), "BP OxygenTank Small")
+    self.assertEqual(clean_game_string("/Script/CoreUObject/Class"),
+                     "CoreUObject/Class")
+    self.assertEqual(clean_game_string("/Data/Blueprints/BP_Seamoth"),
+                     "BP Seamoth")
+    self.assertEqual(clean_game_string("BP_OxygenTank_Small"),
+                     "BP OxygenTank Small")
     self.assertEqual(clean_game_string("_DA_Copper_"), "DA Copper")
 
 

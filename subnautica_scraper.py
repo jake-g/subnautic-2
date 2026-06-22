@@ -88,7 +88,6 @@ for sub in ['Config/Windows', 'ImGui']:
 print(json.dumps(payload))
 """
 
-
 # ==============================================================================
 # SaveGame Binary Decoding Logic
 # ==============================================================================
@@ -148,67 +147,57 @@ def decode_binary_sav(sav_path: str) -> Dict[str, Any]:
 
   for s in sorted(list(decoded)):
     low = s.lower()
-    if any(
-        k in low
-        for k in [
-            "titanium",
-            "copper",
-            "quartz",
-            "silver",
-            "lead",
-            "glass",
-            "wire",
-            "medkit",
-            "battery",
-            "tank",
-            "seaglide",
-            "scanner",
-            "builder",
-            "flashlight",
-            "flare",
-            "rebreather",
-            "knife",
-            "o2",
-        ]
-    ):
+    if any(k in low for k in [
+        "titanium",
+        "copper",
+        "quartz",
+        "silver",
+        "lead",
+        "glass",
+        "wire",
+        "medkit",
+        "battery",
+        "tank",
+        "seaglide",
+        "scanner",
+        "builder",
+        "flashlight",
+        "flare",
+        "rebreather",
+        "knife",
+        "o2",
+    ]):
       categories["survival_gear_and_tools"].append(s)
-    elif any(
-        k in low
-        for k in [
-            "hatch",
-            "locker",
-            "solarpanel",
-            "biobed",
-            "stackedroom",
-            "corridor",
-            "vehiclebay",
-            "foundation",
-            "fabricator",
-        ]
-    ):
+    elif any(k in low for k in [
+        "hatch",
+        "locker",
+        "solarpanel",
+        "biobed",
+        "stackedroom",
+        "corridor",
+        "vehiclebay",
+        "foundation",
+        "fabricator",
+    ]):
       categories["constructed_base_modules"].append(s)
-    elif any(
-        k in low
-        for k in [
-            "/game/maps/",
-            "basecamp",
-            "campone",
-            "shallow",
-            "kelp",
-            "thermal",
-            "garden",
-            "crevasse",
-            "lifepod",
-            "outpost",
-        ]
-    ):
+    elif any(k in low for k in [
+        "/game/maps/",
+        "basecamp",
+        "campone",
+        "shallow",
+        "kelp",
+        "thermal",
+        "garden",
+        "crevasse",
+        "lifepod",
+        "outpost",
+    ]):
       categories["map_zones_and_pois"].append(s)
     elif "blueprint" in low or "unlocked" in low or "techtype" in low:
       categories["blueprints_and_pda"].append(s)
     elif any(
         k in low
-        for k in ["signal", "storygoal", "radio", "transmission", "blackbox"]
-    ):
+        for k in ["signal", "storygoal", "radio", "transmission", "blackbox"]):
       categories["narrative_and_radio_quests"].append(s)
 
   clean_categories: Dict[str, List[str]] = {}
@@ -217,10 +206,14 @@ def decode_binary_sav(sav_path: str) -> Dict[str, Any]:
     clean_categories[cat] = [it for it in cleaned_set if len(it) >= 3][:60]
 
   return {
-      "source_file": os.path.basename(sav_path),
-      "size_bytes": file_size,
-      "meaningful_gameplay_records": sum(len(v) for v in clean_categories.values()),
-      "progression_telemetry": clean_categories,
+      "source_file":
+          os.path.basename(sav_path),
+      "size_bytes":
+          file_size,
+      "meaningful_gameplay_records":
+          sum(len(v) for v in clean_categories.values()),
+      "progression_telemetry":
+          clean_categories,
   }
 
 
@@ -233,8 +226,7 @@ def write_markdown_guide(data: Dict[str, Any], out_path: str) -> str:
         f"> **Binary Save Geometry**: Decoded from `{data['source_file']}`"
         f" ({data['size_bytes']:,} bytes). Filtered out raw engine serialization"
         " artifacts. Total high-fidelity gameplay progression records extracted:"
-        f" **{data['meaningful_gameplay_records']:,}**.\n\n"
-    )
+        f" **{data['meaningful_gameplay_records']:,}**.\n\n")
 
     for cat_name, items in data["progression_telemetry"].items():
       title = cat_name.replace("_", " ").title()
@@ -263,11 +255,13 @@ def decode_all_saves() -> List[str]:
     if f.startswith("savegame_") and f.endswith(".sav"):
       sav_p = os.path.join(BACKUP_DIR, f)
       decoded = decode_binary_sav(sav_p)
-      base_out = os.path.join(BACKUP_DIR, os.path.splitext(f)[0] + "_decoded.md")
+      base_out = os.path.join(BACKUP_DIR,
+                              os.path.splitext(f)[0] + "_decoded.md")
       md_p = write_markdown_guide(decoded, base_out)
       results.append(md_p)
 
-  print(f"-> Successfully decoded {len(results)} binary save files in backups/.")
+  print(
+      f"-> Successfully decoded {len(results)} binary save files in backups/.")
   return results
 
 
@@ -308,7 +302,9 @@ def execute_pull() -> None:
     local_p = os.path.join(BACKUP_DIR, fname)
     with open(local_p, "w", encoding="utf-8") as f:
       f.write(text_val)
-  print(f"-> Successfully pulled {len(configs)} plaintext engine config profiles.")
+  print(
+      f"-> Successfully pulled {len(configs)} plaintext engine config profiles."
+  )
 
   print("-> Auto-decoding newly synced binary save files...")
   decode_all_saves()
@@ -326,11 +322,13 @@ def execute_push() -> None:
     p = os.path.join(BACKUP_DIR, f)
     if os.path.isfile(p):
       if f.endswith(".sav"):
-        raw_b = open(p, "rb").read()
-        saves_payload[f] = base64.b64encode(raw_b).decode("ascii")
-      elif any(f.endswith(ext) for ext in [".ini", ".json", ".cfg"]) and not f.endswith(".md"):
+        with open(p, "rb") as sav_file:
+          saves_payload[f] = base64.b64encode(sav_file.read()).decode("ascii")
+      elif any(f.endswith(ext)
+               for ext in [".ini", ".json", ".cfg"]) and not f.endswith(".md"):
         rel_key = f"ImGui/{f}" if f == "Game.ini" else f"Config/Windows/{f}"
-        configs_payload[rel_key] = open(p, "r", encoding="utf-8").read()
+        with open(p, "r", encoding="utf-8") as cfg_file:
+          configs_payload[rel_key] = cfg_file.read()
 
   push_script = f"""import os, base64
 
@@ -352,7 +350,9 @@ for rel_key, txt_val in configs.items():
 print("PUSH_SUCCESS")
 """
 
-  print(f"-> Pushing {len(saves_payload)} saves and {len(configs_payload)} configs...")
+  print(
+      f"-> Pushing {len(saves_payload)} saves and {len(configs_payload)} configs..."
+  )
   process = subprocess.run(
       ["ssh", "-o", "ConnectTimeout=6", PC_SSH_HOST, "python"],
       input=push_script.encode("utf-8"),
@@ -362,7 +362,8 @@ print("PUSH_SUCCESS")
 
   out_str = process.stdout.decode("utf-8", errors="ignore")
   if "PUSH_SUCCESS" in out_str:
-    print("-> Successfully synchronized flat local vault to remote gaming host.")
+    print(
+        "-> Successfully synchronized flat local vault to remote gaming host.")
   else:
     err_msg = process.stderr.decode("utf-8", errors="ignore").strip()
     raise RuntimeError(f"Remote push execution failed: {err_msg}")
@@ -377,7 +378,10 @@ def fetch_remote_telemetry() -> Dict[str, Any]:
   """Executes remote python script over SSH and returns parsed JSON data."""
   print(f"Connecting to remote gaming PC ({PC_SSH_HOST})...")
   process = subprocess.run(
-      ["ssh", "-o", "ConnectTimeout=6", PC_SSH_HOST, f"python {REMOTE_SCRIPT_PATH}"],
+      [
+          "ssh", "-o", "ConnectTimeout=6", PC_SSH_HOST,
+          f"python {REMOTE_SCRIPT_PATH}"
+      ],
       capture_output=True,
       check=False,
   )
@@ -437,7 +441,8 @@ def pull_remote_engine_log() -> None:
 def format_markdown_report(data: Dict[str, Any], git_hash: str) -> str:
   """Synthesizes telemetry data into structured diagnostic markdown report."""
   save_files = data.get("save_files", [])
-  main_save = next((s for s in save_files if s["name"] == "savegame_1.sav"), {})
+  main_save: Dict[str, Any] = next(
+      (s for s in save_files if s["name"] == "savegame_1.sav"), {})
   main_size_kb = f"{main_save.get('size', 0) / 1024:.1f} KB"
   main_mod = main_save.get("modified", "Unknown")[:19].replace("T", " ")
 
@@ -470,21 +475,12 @@ def format_markdown_report(data: Dict[str, Any], git_hash: str) -> str:
   tools_str = ", ".join(clean_tools[:3])
   gear_str = ", ".join(clean_tools[3:])
   res_str = ", ".join(clean_resources)
-  base_str = (
-      ", ".join(f"`{bp}`" for bp in base_pieces[:8])
-      if base_pieces
-      else "`BP_SupplyLocker`, `FloatingLocker`"
-  )
-  pois_str = (
-      ", ".join(f"`{p}`" for p in pois[:6])
-      if pois
-      else "`POI_Basecamp`, `SurveyRoom`"
-  )
-  flags_str = (
-      ", ".join(f"`{fl}`" for fl in world_flags[:6])
-      if world_flags
-      else "`bStartupItemsHaveBeenAdded=True`, `Chapter1Booted`"
-  )
+  base_str = (", ".join(f"`{bp}`" for bp in base_pieces[:8])
+              if base_pieces else "`BP_SupplyLocker`, `FloatingLocker`")
+  pois_str = (", ".join(
+      f"`{p}`" for p in pois[:6]) if pois else "`POI_Basecamp`, `SurveyRoom`")
+  flags_str = (", ".join(f"`{fl}`" for fl in world_flags[:6]) if world_flags
+               else "`bStartupItemsHaveBeenAdded=True`, `Chapter1Booted`")
 
   decoded_path = os.path.join(BACKUP_DIR, "savegame_1_decoded.md")
   ini_path = os.path.join(BACKUP_DIR, "GameUserSettings.ini")
@@ -582,10 +578,19 @@ def main() -> None:
   """Main execution entrypoint for unified Subnautica telemetry scraper."""
   parser = argparse.ArgumentParser(description="Subnautica 2 Telemetry Toolkit")
   group = parser.add_mutually_exclusive_group(required=False)
-  group.add_argument("--report", action="store_true", help="Scrape live telemetry and update REPORT.md (default)")
-  group.add_argument("--pull", action="store_true", help="Pull remote saves and configs locally")
-  group.add_argument("--push", action="store_true", help="Push local backup vault to remote PC")
-  group.add_argument("--decode", action="store_true", help="Decode all local save files in backups/")
+  group.add_argument(
+      "--report",
+      action="store_true",
+      help="Scrape live telemetry and update REPORT.md (default)")
+  group.add_argument("--pull",
+                     action="store_true",
+                     help="Pull remote saves and configs locally")
+  group.add_argument("--push",
+                     action="store_true",
+                     help="Push local backup vault to remote PC")
+  group.add_argument("--decode",
+                     action="store_true",
+                     help="Decode all local save files in backups/")
 
   args = parser.parse_args()
   try:

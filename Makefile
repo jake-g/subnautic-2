@@ -4,7 +4,7 @@ PC_SSH ?= jake@192.168.0.100
 REMOTE_SAVE_ROOT ?= C:/Users/jake/AppData/Local/Subnautica2/Saved
 LOCAL_SCRIPT ?= subnautica_scraper.py
 
-.PHONY: help report status configs pull push pull-saves push-saves sync format decode git-status git-log git-diff snapshot ssh logs tail test lint
+.PHONY: help report status configs pull push pull-saves push-saves sync format decode git-status git-log git-diff snapshot ssh logs tail test lint setup
 
 help:
 	@echo "===================================================================="
@@ -91,13 +91,16 @@ format decode:
 ssh:
 	@ssh $(PC_SSH)
 
-lint:
+setup:
+	@if [ ! -d "venv" ]; then python3 -m venv venv && venv/bin/pip install -r requirements.txt; fi
+
+lint: setup
 	@echo "🖌️  Forcing YAPF Python Formatting (2-space indent)..."
-	@git ls-files '*.py' | xargs python3 -m yapf -i --style="{based_on_style: google, indent_width: 2, column_limit: 80}"
+	@git ls-files '*.py' | xargs venv/bin/yapf -i --style="{based_on_style: google, indent_width: 2, column_limit: 80}"
 	@echo "🛠️  Running full pre-commit validation suite..."
-	@python3 -m pre_commit run --all-files
+	@venv/bin/pre-commit run --all-files
 	@echo "✅ All styling, typing, and formatting checks passed!"
 
 test: lint
 	@echo "-> Running Python test suite..."
-	python3 -m unittest subnautica_scraper_tests.py
+	venv/bin/python3 -m unittest subnautica_scraper_tests.py
