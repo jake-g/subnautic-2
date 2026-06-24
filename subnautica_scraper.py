@@ -71,7 +71,7 @@ payload = {'saves': {}, 'configs': {}}
 
 if os.path.exists(save_dir):
   for f in os.listdir(save_dir):
-    if any(f.endswith(ext) for ext in ['.sav', '.bin', '.prof', '.dat']):
+    if f.startswith('savegame_') and f.endswith('.sav'):
       p = os.path.join(save_dir, f)
       if os.path.isfile(p):
         raw = open(p, 'rb').read()
@@ -88,14 +88,12 @@ for sub in ['Config/Windows', 'ImGui']:
 
 log_dir = os.path.join(cfg_root, 'Logs')
 if os.path.exists(log_dir):
-  for f in os.listdir(log_dir):
-    if (f.endswith('.log') or f.endswith('.txt')) and 'Subnautica2' in f:
-      p = os.path.join(log_dir, f)
-      if os.path.isfile(p):
-        try:
-          payload['configs'][f] = open(p, 'r', errors='ignore').read()
-        except Exception:
-          pass
+  p = os.path.join(log_dir, 'Subnautica2.log')
+  if os.path.isfile(p):
+    try:
+      payload['configs']['Subnautica2.log'] = open(p, 'r', errors='ignore').read()
+    except Exception:
+      pass
 
 print(json.dumps(payload))
 """
@@ -138,7 +136,9 @@ def extract_coordinates_from_sav(sav_path: str) -> List[str]:
     data = f.read()
   results = []
   keywords = [
-      b"Player", b"CoralGardens", b"BioBed", b"SolarPanel", b"BP_Builder"
+      b"Player", b"CoralGardens", b"BioBed", b"SolarPanel", b"BP_Builder",
+      b"BP_WorldSupplyLocker", b"Locker", b"Hatch", b"Wakemaker", b"Beacon",
+      b"CampOne", b"Storage", b"Fabricator",
   ]
   for kw in keywords:
     pos = 0
@@ -188,6 +188,7 @@ def decode_binary_sav(sav_path: str) -> Dict[str, Any]:
   categories: Dict[str, List[str]] = {
       "survival_gear_and_tools": [],
       "constructed_base_modules": [],
+      "submersibles_and_vehicles": [],
       "map_zones_and_pois": [],
       "blueprints_and_pda": [],
       "narrative_and_radio_quests": [],
@@ -196,52 +197,34 @@ def decode_binary_sav(sav_path: str) -> Dict[str, Any]:
   for s in sorted(list(decoded)):
     low = s.lower()
     if any(k in low for k in [
-        "titanium",
-        "copper",
-        "quartz",
-        "silver",
-        "lead",
-        "glass",
-        "wire",
-        "medkit",
-        "battery",
-        "tank",
-        "seaglide",
-        "scanner",
-        "builder",
-        "flashlight",
-        "flare",
-        "rebreather",
-        "knife",
-        "o2",
+        "titanium", "copper", "quartz", "silver", "lead", "glass", "wire",
+        "medkit", "battery", "tank", "scanner", "builder", "flashlight",
+        "flare", "rebreather", "knife", "o2", "salt", "gold", "diamond",
+        "magnetite", "lithium", "sulfur", "silicone", "lubricant", "fibermesh",
+        "repair", "laser", "resonat", "powercell", "water",
     ]):
       categories["survival_gear_and_tools"].append(s)
     elif any(k in low for k in [
-        "hatch",
-        "locker",
-        "solarpanel",
-        "biobed",
-        "stackedroom",
-        "corridor",
-        "vehiclebay",
-        "foundation",
-        "fabricator",
+        "hatch", "locker", "solarpanel", "biobed", "stackedroom", "corridor",
+        "foundation", "fabricator", "bioreactor", "turbine", "waterfilter",
+        "growbed", "scannerroom", "wakemaker", "chair", "bench", "table",
+        "floodlight", "processor", "biolab", "beacon",
     ]):
       categories["constructed_base_modules"].append(s)
     elif any(k in low for k in [
-        "/game/maps/",
-        "basecamp",
-        "campone",
-        "shallow",
-        "kelp",
-        "thermal",
-        "garden",
-        "crevasse",
-        "lifepod",
-        "outpost",
+        "tadpole", "seaglide", "seamoth", "prawn", "cyclops", "submersible",
+        "dock", "vehiclebay",
+    ]):
+      categories["submersibles_and_vehicles"].append(s)
+    elif any(k in low for k in [
+        "/game/maps/", "basecamp", "campone", "shallow", "kelp", "thermal",
+        "garden", "crevasse", "lifepod", "outpost",
     ]):
       categories["map_zones_and_pois"].append(s)
-    elif "blueprint" in low or "unlocked" in low or "techtype" in low:
+    elif any(k in low for k in [
+        "blueprint", "unlocked", "techtype", "fragment", "progress",
+        "databank", "recipe",
+    ]):
       categories["blueprints_and_pda"].append(s)
     elif any(
         k in low
@@ -524,15 +507,35 @@ def format_markdown_report(data: Dict[str, Any], git_hash: str) -> str:
   world_flags = data.get("world_flags", [])
   pois = data.get("poi_landmarks", [])
 
-  tools_str = ", ".join(clean_tools[:3])
-  gear_str = ", ".join(clean_tools[3:])
-  res_str = ", ".join(clean_resources)
-  base_str = (", ".join(f"`{bp}`" for bp in base_pieces[:8])
-              if base_pieces else "`BP_SupplyLocker`, `FloatingLocker`")
-  pois_str = (", ".join(
-      f"`{p}`" for p in pois[:6]) if pois else "`POI_Basecamp`, `SurveyRoom`")
-  flags_str = (", ".join(f"`{fl}`" for fl in world_flags[:6]) if world_flags
-               else "`bStartupItemsHaveBeenAdded=True`, `Chapter1Booted`")
+  sav_path = os.path.join(BACKUP_DIR, "savegame_1.sav")
+  decoded_sav = decode_binary_sav(sav_path) if os.path.exists(sav_path) else {}
+  telem = decoded_sav.get("progression_telemetry", {})
+  if decoded_sav:
+    main_size_kb = f"{decoded_sav.get('size_bytes', 0) / 1024:.1f} KB"
+
+  tools_gear = telem.get("survival_gear_and_tools", clean_tools + clean_resources)
+  base_mods = telem.get("constructed_base_modules", base_pieces)
+  vehicles = telem.get("submersibles_and_vehicles", [])
+  pois_list = telem.get("map_zones_and_pois", pois)
+  quests_list = telem.get("narrative_and_radio_quests", world_flags)
+  coords_list = telem.get("spatial_geometry", [])
+
+  tools_str = (", ".join(f"`{t}`" for t in tools_gear[:6])
+               if tools_gear else ", ".join(clean_tools[:3]))
+  gear_str = (", ".join(f"`{t}`" for t in tools_gear[6:12])
+              if len(tools_gear) > 6 else ", ".join(clean_tools[3:]))
+  res_str = (", ".join(f"`{t}`" for t in tools_gear[12:22])
+             if len(tools_gear) > 12 else ", ".join(clean_resources))
+  base_str = (", ".join(f"`{bp}`" for bp in base_mods[:10])
+              if base_mods else "`BP_SupplyLocker`, `FloatingLocker`")
+  vehicles_str = (", ".join(f"`{v}`" for v in vehicles) if vehicles
+                  else "*None detected in current save register*")
+  pois_str = (", ".join(f"`{p}`" for p in pois_list[:8])
+              if pois_list else "`POI_Basecamp`, `SurveyRoom`")
+  flags_str = (", ".join(f"`{fl}`" for fl in quests_list[:8])
+               if quests_list else "`bStartupItemsHaveBeenAdded=True`")
+  coords_str = ("\n".join(f"* `{c}`" for c in coords_list)
+                if coords_list else "*Origin Pod (X=0, Y=0, Z=0)*")
 
   decoded_path = os.path.join(BACKUP_DIR, "savegame_1_decoded.md")
   ini_path = os.path.join(BACKUP_DIR, "GameUserSettings.ini")
@@ -569,27 +572,31 @@ Raw extracted equipment items and resource nodes actively discovered in workspac
 ## Biome Coordinates
 Telemetry engine confirms player traversal across the following core world partitions:
 
-| Partition / Zone | Evaluated Telemetry Symbols | Approx Depth | Distance & Direction from Pod | Relative to Angel Comb Habitat |
-| :--- | :--- | :--- | :--- | :--- |
-| **Safe Shallows / Pod** | `L_Main`, `Lifepod_SignalOriginal` | ~0m | Origin (`X: 0m, Y: 0m`) | ~238m East |
-| **Angel Comb Habitat** | `CoralGardens`, `BioBed`, `SolarPanel` | ~30m | ~238m West (`X: 0.1m, Y: -237.8m W`) | Core Base Reference Point |
-| **Crashed Black Box** | `CoralGardensRadioMessageBlackBox` | ~45m | ~380m North | ~250m Northeast |
-| **Kelp Forest Border** | `FeatherKelp`, `KelpRandomNode` | ~50m-90m | ~250m-400m West / Southwest | Directly South & Adjacent |
-| **Welcome Center BioLab**| `DA__Signal_WelcomeCent_Hide` | ~60m | ~500m Northwest | ~300m North-Northwest |
-| **Abandoned Basecamp** | `InvesgPOI_PZ_Basecamp`, `ColonistBunker052` | ~70m | ~420m West | ~180m West along canyon shelf |
-| **Thermal Vents** | `SmallVent`, `VentFall` | ~80m-120m | ~450m Northeast / East | ~550m East-Northeast |
+| Partition / Zone | Evaluated Telemetry Symbols | Approx Depth | Distance & Direction from Pod | Relative to Angel Comb Habitat | Threat Level |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Safe Shallows / Pod** | `L_Main`, `Lifepod_SignalOriginal` | ~0m | Origin (`X: 0m, Y: 0m`) | ~238m East | None |
+| **Angel Comb Habitat** | `CoralGardens`, `BioBed`, `SolarPanel` | ~30m | ~238m West (`X: 0.1m, Y: -237.8m W`) | Core Base Reference Point | Low |
+| **Crashed Black Box** | `CoralGardensRadioMessageBlackBox` | ~45m | ~380m North | ~250m Northeast | Low |
+| **Kelp Forest Border** | `FeatherKelp`, `KelpRandomNode` | ~50m-90m | ~250m-400m West / Southwest | Directly South & Adjacent | Medium |
+| **Welcome Center BioLab**| `DA__Signal_WelcomeCent_Hide` | ~60m | ~500m Northwest | ~300m North-Northwest | Medium |
+| **Abandoned Basecamp** | `InvesgPOI_PZ_Basecamp`, `ColonistBunker052` | ~70m | ~420m West | ~180m West along canyon shelf | High |
+| **Thermal Vents** | `SmallVent`, `VentFall` | ~80m-120m | ~450m Northeast / East | ~550m East-Northeast | High |
 
-## Narrative Quests
+## Narrative Quests & Radio Signals
 * **Welcome Center Signal**: `DA__Signal_WelcomeCent_Hide`
 * **Habitat Beacon**: `DA__Signal_Habitat_Hide`
 * **Emergency Lifepod**: `Lifepod_SignalOriginal`
 * **Black Box Investigation**: `CoralGardensRadioMessageBlackBox`
 
-## Constructed Facilities
-* **Base Modules**: {base_str}
+## Constructed Facilities & Vehicles
+* **Base Modules & Tech**: {base_str}
+* **Submersibles & Hulls**: {vehicles_str}
 * **Discovered POIs**: {pois_str}
 * **World Engine Milestones**: {flags_str}
 * **Decoded Progression Guide**: [savegame_1_decoded.md](./backups/savegame_1_decoded.md)
+
+## Live Spatial Geometry (Save Coordinates Matrix)
+{coords_str}
 
 ## Graphics Configuration
 Summary extracted from [GameUserSettings.ini](./backups/GameUserSettings.ini):
