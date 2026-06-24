@@ -589,10 +589,10 @@ Telemetry engine confirms player traversal across the following core world parti
 * **Base Modules**: {base_str}
 * **Discovered POIs**: {pois_str}
 * **World Engine Milestones**: {flags_str}
-* **Decoded Progression Guide**: [savegame_1_decoded.md](file://{decoded_path})
+* **Decoded Progression Guide**: [savegame_1_decoded.md](./backups/savegame_1_decoded.md)
 
 ## Graphics Configuration
-Summary extracted from [GameUserSettings.ini](file://{ini_path}):
+Summary extracted from [GameUserSettings.ini](./backups/GameUserSettings.ini):
 * **Resolution**: ResolutionSizeX=1280, ResolutionSizeY=720
 * **Frame Rate Cap**: FrameRateLimit=120.000000
 * **Upscaling Quality**: ScalabilityQuality_TSR=3
@@ -609,14 +609,16 @@ Snapshot of diagnostic gameplay session events logged by engine:
   report += f"""```
 
 ## Reference Links
-* **Progression Roadmap**: [TODO.md](file://{todo_path})
-* **Primary Project Guide**: [README.md](file://{readme_path})
-* **Previous Chat Archive**: [subnuatica_2_previous_chat.md](file://{PREV_CHAT_PATH})
-* **Local Engine Log Dump**: [Subnautica2.log](file://{LOCAL_LOG_PATH})
-* **Local Backups Vault**: [backups/](file://{BACKUP_DIR})
-* **Developer Toolkit**: [Makefile](file://{makefile_path})
-* **Unified Toolkit**: [subnautica_scraper.py](file://{scraper_path})
-* **Project Changelog**: [CHANGELOG.md](file://{changelog_path})
+* **Progression Guide**: [GUIDE.md](./GUIDE.md)
+* **Progression Roadmap**: [TODO.md](./TODO.md)
+* **Primary Project Guide**: [README.md](./README.md)
+* **Multiplayer Cloud SOP**: [MULTIPLAYER.md](./MULTIPLAYER.md)
+* **Previous Chat Archive**: [subnuatica_2_previous_chat.md](./backups/subnuatica_2_previous_chat.md)
+* **Local Engine Log Dump**: [Subnautica2.log](./backups/Subnautica2.log)
+* **Local Backups Vault**: [backups/](./backups)
+* **Developer Toolkit**: [Makefile](./Makefile)
+* **Unified Toolkit**: [subnautica_scraper.py](./subnautica_scraper.py)
+* **Project Changelog**: [CHANGELOG.md](./CHANGELOG.md)
 * **Steam News Hub**: [store.steampowered.com/news/app/1962700](https://store.steampowered.com/news/app/1962700)
 * **Dev Kanban Board**: [subnautica2.nolt.io/kanban](https://subnautica2.nolt.io/kanban)
 * **Official Site News**: [unknownworlds.com/en/news](https://unknownworlds.com/en/news)

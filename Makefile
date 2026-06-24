@@ -58,6 +58,10 @@ push push-saves:
 sync: pull
 	@echo "-> Vault synchronization completed."
 
+git-push push-all:
+	@echo "-> Pushing local repository to all configured remotes..."
+	git push origin main && git push personal main
+
 git-status:
 	@echo "-> Inspecting remote save repository Git working tree..."
 	-@ssh -o ConnectTimeout=5 $(PC_SSH) 'powershell -Command "git -C \"$(REMOTE_SAVE_ROOT)\" status -s"'

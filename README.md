@@ -1,62 +1,36 @@
 # Subnautica 2 Telemetry Toolkit
 
-A dedicated engineering toolkit and automated coaching bridge for **Subnautica 2** (Early Access Standalone / Unreal Engine 5). This repository connects to a remote Windows 11 gaming rig over SSH (`192.168.0.100`), inspects live binary Unreal Engine 5 SaveGame files (`.sav`), synchronizes save vaults locally, and generates clinical coaching walkthroughs and diagnostic telemetry reports ([REPORT.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/REPORT.md)).
+A dedicated engineering toolkit and automated coaching bridge for **Subnautica 2** (Early Access Standalone / Unreal Engine 5). This repository connects to a remote Windows 11 gaming rig over SSH (`192.168.0.100`), inspects live binary Unreal Engine 5 SaveGame files (`.sav`), synchronizes save vaults locally, and generates clinical coaching walkthroughs and diagnostic telemetry reports ([REPORT.md](./REPORT.md)).
 
 ## Features
 - **Remote Telemetry Bridge**: Connects to the gaming rig (`jake@192.168.0.100`), runs Python regex parsers against binary save files, and extracts player inventory, equipped tools, and visited biomes.
 - **File Synchronization**: Bi-directional base64 transfer tool (`sync_remote_vault.py`) that pulls binary saves (`.sav`) and engine config profiles (`GameUserSettings.ini`) flat into local backups (`backups/`).
 - **SaveGame Decoder**: Plaintext converter (`decode_sav.py`) that filters out boilerplate UE5 serialization noise and dumps progression registers to markdown guides.
 - **Remote Rollback**: Tracks remote progression states directly inside `C:/Users/jake/AppData/Local/Subnautica2/Saved/.git` on the gaming host, preventing save corruption.
-- **Diagnostic Telemetry**: Synthesizes live binary save inspection and GameUserSettings.ini profiles into [REPORT.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/REPORT.md).
+- **Diagnostic Telemetry**: Synthesizes live binary save inspection and GameUserSettings.ini profiles into [REPORT.md](./REPORT.md).
 
-## Action Roadmap
-Active coaching roadmap structured in reverse chronological order (newest coaching instructions at the top, oldest completed milestones at the bottom).
+## 📚 Documentation
 
-### Pending Focus
-* [ ] **TODO-8 (Base Construction)**: Travel to **Coral Gardens** (flat terrain, safe area ~350m N) and construct your starter habitat base. Build a Foundation / Square Room, attach a Hatch, install 2 Solar Panels on the roof immediately for power/O₂, and build 4-5 Wall Lockers inside so you can finally get dropped items off the lifepod floor!
-* [ ] **TODO-7 (Cloud Sync Safety)**: Before experimenting with multiplayer cloud-share codes (`Upload to Cloud` / `Import Save`), always stow personal gear and equipment inside base lockers so Early Access character imports don't clear your inventory.
-* [ ] **TODO-6 (Story Investigation)**: Track down and investigate the **Coral Gardens Radio Message / Black Box** emergency transmission signal.
-* [ ] **TODO-5 (Depth Upgrades)**: Craft a higher-capacity Standard Oxygen Tank (using discovered Silver/Wiring Kit) and a Rebreather to scout deeper West/Northwest trenches.
-* [ ] **TODO-4 (Vehicle Scouting)**: Explore Thermal Vents and Kelp borders to locate and scan vehicle fragments (`Seaglide`, submersible modules).
+This repository enforces a strict separation of concerns across its core Markdown documents to ensure seamless navigation between live telemetry, macro strategy, and granular checklists:
 
-### Completed Setup
-* [x] **TODO-3 (Remote Git Rollback Engine)**: Version-controlled remote Windows save directory `C:/Users/jake/AppData/Local/Subnautica2/Saved/` with custom `.gitignore` to prevent save corruption.
-* [x] **TODO-2 (Telemetry Bridge Setup)**: Configured local SSH scraper `subnautica_scraper.py` and developer toolkit `Makefile` locally to inspect live Unreal Engine 5 saves on gaming PC (`192.168.0.100`).
-* [x] **TODO-1 (First Base Shopping List)**: Scouted ~239m W into Infected Crevasse, extracted Silver nodes from narrow crawlspace veins, collected Titanium/Quartz/Copper, and crafted the Habitat Builder tool (`BP_Builder`).
+| Document | Primary Scope | Update Lifecycle |
+| :--- | :--- | :--- |
+| **[README.md](./README.md)** | Technical project architecture, SSH telemetry bridge pipeline capabilities, SaveGame parser de-noising boundaries, and developer CLI automation targets (`Makefile`). | Updated when tooling or bridge features expand. |
+| **[REPORT.md](./REPORT.md)** | **Live Diagnostic Telemetry**: Dynamic progression state, equipped tool loadouts, gathered ore registers, spatial base coordinates (`X, Y, Z`), and loaded world partition flags decoded from `savegame_1.sav`. | **Dynamically regenerated** on every `make report` run. |
+| **[GUIDE.md](./GUIDE.md)** | **High-Level Progression Guide & Compendium**: Macro progression phases (Phases 1–4 without spoilers), clinical biome geometry matrix, beginner survival wisdom, transition criteria, and official dev news links. | Static reference updated for new game updates. |
+| **[TODO.md](./TODO.md)** | **Immediate Action Roadmap**: Actionable pending checklists sequenced for efficient geographic sweeps (crafting milestones, shopping lists, and systematic exploration verification SOPs). | Updated as items are completed in-game. |
+| **[MULTIPLAYER.md](./MULTIPLAYER.md)**| **Multiplayer Cloud Sharing & Save SOP**: Clinical reference on Subnautica 2 cloud copy/paste snapshot semantics, Pass the Torch re-sync protocol, inventory reset gotchas, and automated background daemons. | Static reference synthesized from community research. |
+| **[CHANGELOG.md](./CHANGELOG.md)** | **Reverse-Chronological Ledger**: Historical record of completed coaching milestones and base construction achievements. | Updated whenever pending TODOs are completed. |
 
-## Journey Assessment
-Synthesis of past chat coaching combined with live binary save inspection (`savegame_1.sav`).
+## Architecture & Capabilities
+This repository automates live gameplay inspection, file synchronization, and clinical coaching guide generation using a three-tier telemetry bridge:
+1. **Live Remote Scraping (`make report`)**: Connects to the gaming rig (`jake@192.168.0.100`) via SSH, inspects active binary Unreal Engine 5 SaveGame files (`.sav`) and `GameUserSettings.ini`, and synthesizes diagnostic summaries into [REPORT.md](./REPORT.md).
+2. **Vault Synchronization (`make pull` / `make push`)**: Bi-directional base64 transfer engine (`subnautica_scraper.py`) that mirrors remote `.sav` vaults and configuration profiles flat into local archives (`backups/`).
+3. **SaveGame Decoder (`make decode`)**: Strips UE5 serialization noise from binary save archives, extracts progression registers (`backups/savegame_1_decoded.md`), and updates [TODO.md](./TODO.md).
+4. **Remote Git Rollback Engine**: Tracks remote progression states directly inside `C:/Users/jake/AppData/Local/Subnautica2/Saved/.git` on the gaming PC, preventing save corruption.
 
-### Current Status
-* **Resource Hoarding Phase**: You successfully scouted the Infected Crevasse (~239m West of lifepod) near the Infected Angel Bloom landmark. By checking halfway up cliff walls and crawlspace tunnels, you secured Silver alongside Titanium, Copper, and Quartz.
-* **Storage Overflow**: You returned to the emergency lifepod, crafted your Habitat Builder tool (`BP_Builder`), but completely ran out of container storage, leaving spare gathered materials dropped on the floor.
-
-### First Base Walkthrough
-To resolve storage bottlenecks and unlock interior crafting:
-1. **Pick the Site**: Swim to Coral Gardens (or a flat sandy shelf near your lifepod). Flat terrain prevents clipping errors.
-2. **Build Core Frame**: Place a basic room/corridor and attach a Side Hatch for entry.
-3. **Energize Immediately**: Place 2 Solar Panels on the roof. Without external power, the habitat will not generate breathable oxygen inside.
-4. **Deploy Lockers**: Step inside and construct 4 to 5 Wall Lockers. Transfer all floor clutter and excess Titanium/Quartz into these organized containers.
-
-## Multiplayer SOP
-Reference documentation on Subnautica 2 Early Access multiplayer cloud copy/paste snapshot semantics.
-
-### Snapshot Semantics
-The built-in cloud-share system in Subnautica 2 is an asynchronous copy/paste snapshot tool, not a live cloud synchronized lobby.
-* **Host Sharing**: Person A clicks "Upload to Cloud" from the main menu. The server generates a unique 8-digit share code.
-* **Guest Importing**: Person B enters this code via "Import Save". Person B receives an isolated local clone of Person A's world. Any subsequent building Person B does solo exists solely on Person B's PC.
-
-### Torch Re-Sync Workflow
-To merge Person B's solo base expansions back to Person A:
-1. Person B saves solo progress, returns to main menu, clicks "Upload to Cloud", and generates a new 8-digit code.
-2. Person B transmits this code to Person A.
-3. Person A clicks "Import Save" and inputs the new code, overwriting their older local save tree.
-
-> [!WARNING]
-> **Zero Merge Capability**: If Person A and Person B both play solo on diverged copies simultaneously, their worlds cannot be merged. Only one designated player should progress the master save solo at any time.
-
-> [!CAUTION]
-> **Early Access Inventory Reset Bug**: Importing cloud saves frequently resets player inventories or respawns characters at the starter pod. Always deposit all gear, tools, and raw minerals into a base locker before uploading or importing cloud codes.
+## Multiplayer
+For comprehensive guidelines on Subnautica 2 Early Access multiplayer cloud copy/paste snapshot semantics, "Pass the Torch" re-sync protocols, inventory reset bugs, and third-party background syncing daemons (`SaveSync`), consult [MULTIPLAYER.md](./MULTIPLAYER.md).
 
 ## Telemetry Capabilities
 Catalog of progression registers and config parameters to distinguish between live refreshed data and static curated coaching.
@@ -72,14 +46,34 @@ Catalog of progression registers and config parameters to distinguish between li
 | **Graphics Profiles**| Render resolution, TSR mode, 120 FPS limit | Live Refreshed | Plaintext parsing of `GameUserSettings.ini` |
 | **Remote VCS** | Active Git commit hash of remote save tree | Live Refreshed | Queried via `git rev-parse` over SSH |
 | **Vault Backups** | Synchronized binary `.sav` files flat in `backups/` | Live Refreshed | Transferred via `make pull` base64 SFTP helper |
-| **Action Roadmap** | Reverse-chronological coaching instructions | Static Guidance | Curated coaching milestones documented manually |
+| **Action Roadmap** | Reverse-chronological coaching instructions | Static Guidance | Curated coaching milestones in [TODO.md](./TODO.md) |
 | **Multiplayer SOP** | Manual 8-digit cloud copy/paste semantics | Static Guidance | Technical reference synthesized from community research |
+
+## SaveGame Telemetry Scope
+
+When inspecting live binary Unreal Engine 5 `.sav` files (`savegame_1.sav`), the telemetry scraper distinguishes between raw serialized registers and manual player verification requirements.
+
+### What CAN Be Extracted / Inferred
+- **Equipped Gear & Hotbar Items**: Serialized instances of `AUWEBaseItem` (e.g., `BP_Builder`, `BP_Scanner`, `Tools_Flashlight`, `BP_OxygenTank_Small`).
+- **Constructed Base Modules**: Serialized world partition blueprint prototypes (`BP_Hatch_C`, `BP_WorldSupplyLocker`, `SolarPanel`, `BioBed`).
+- **Gathered Ores & Resources**: Serialized resource node prototypes (`DA_Titanium`, `DA_Silver`, `DA_Copper`, `DA_Quartz`, `FullGlass`, `CopperWire`).
+- **Major StoryGoal & Signal Flags**: High-level narrative flags and unlocked signals (`DA__Signal_WelcomeCent_Hide`, `DA__Signal_Habitat_Hide`, `CoralGardensRadioMessageBlackBox`, `Lifepod_SignalOriginal`, `ColonistBunker052`).
+- **Unlocked Blueprints**: Fully researched blueprint symbols listed under `::Unlocked` or standard craftable items.
+- **World Partitions Visited**: Instantiated world streaming regions (`L_Main`, `CoralGardens`).
+- **Engine & Graphics Configs**: Render resolutions, upscaling modes, and FPS caps from `GameUserSettings.ini`.
+
+### What CANNOT Be Extracted / Inferred Reliably
+- **Partial Fragment Scan Counts (e.g., 1/3 Seaglide Scanned)**: Unreal Engine 5 SaveGames serialize complete blueprint unlock flags (`::Unlocked`) once fully researched, but intermediate scanning progress (e.g., scanning 1 out of 3 vehicle fragments or 1 out of 2 interior lab benches) is packed into compressed binary property structs that do not expose plaintext ASCII strings.
+- **Individual PDA Datapad Journal & Audio Text**: While StoryGoal triggers confirm that a narrative landmark was reached, the exact plaintext datapad entries read by the player are indexed internally by localization keys (e.g., `StringTs/Phase2Narratives/...`) rather than saved as raw strings.
+- **Precise Quantities per Individual Storage Locker**: While gathered resource types (`DA_Silver`, `DA_Titanium`) are detected in the serialized registry, mapping exact item counts to specific individual `BP_WorldSupplyLocker` containers requires full struct deserialization of UE5 property arrays.
+- **Unexplored / Missing Map POIs**: The binary save file only contains records for entities and streaming regions that have been instantiated or visited. Unscanned tech fragments or unvisited alien artifacts in unexplored ravines leave zero footprint in `.sav` files.
 
 ## Structure
 | File | Description |
 | :--- | :--- |
 | [subnautica_scraper.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/subnautica_scraper.py) | Unified telemetry scraper, vault sync engine, and binary save decoder. |
 | [Makefile](file:///Users/jakegarrison/Downloads/projects/subnautica-2/Makefile) | Developer CLI automation targets. |
+| [TODO.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/TODO.md) | Active exploration tracker, crafting milestones, and habitat progression roadmap. |
 | [REPORT.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/REPORT.md) | Generated live progression telemetry and game settings report. |
 | [CHANGELOG.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/CHANGELOG.md) | Chronological ledger recording developer milestones. |
 | `backups/` | Local flat archive containing synced `.sav` files, INI configs, and logs. |
@@ -101,10 +95,7 @@ make format
 make git-status
 ```
 
-## Reference Links
-* **Diagnostic Report**: [REPORT.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/REPORT.md)
-* **Previous Chat Archive**: [subnuatica_2_previous_chat.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups/subnuatica_2_previous_chat.md)
-* **Engine Log Dump**: [Subnautica2.log](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups/Subnautica2.log)
-* **Backups Vault**: [backups/](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups)
-* **Changelog**: [CHANGELOG.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/CHANGELOG.md)
-* **Official Website**: [subnautica.com](https://subnautica.com)
+## Archive
+* **Previous Chat Archive**: [subnuatica_2_previous_chat.md](./backups/subnuatica_2_previous_chat.md)
+* **Engine Log Dump**: [Subnautica2.log](./backups/Subnautica2.log)
+* **Backups Vault**: [backups/](./backups)

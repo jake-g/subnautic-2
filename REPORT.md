@@ -22,13 +22,18 @@ Raw extracted equipment items and resource nodes actively discovered in workspac
 | **Survival Gear** | Small Oxygen Tank (`BP_OxygenTank_Small`), Basic Battery (`BP_BasicBattery`), First Aid MedKit (`BP_MedKit`) | +45.0 Max Oxygen Set Component verified. |
 | **Raw Resources** | Titanium (`DA_Titanium`), Copper (`DA_Copper`), Quartz (`DA_Quartz`), Silver (`DA_Silver`), Lead (`DA_Lead`), Glass (`FullGlass`), Copper Wire (`CopperWire`) | Serialized in resource node prototypes. |
 
-## World Traversal
+## Biome Coordinates
 Telemetry engine confirms player traversal across the following core world partitions:
-1. **Safe Shallows / Main Hub** (`L_Main`)
-2. **Client Lobby / Outpost** (`L_ClientLobby`)
-3. **Coral Gardens** (`BP_CG_BulbFlower`, `CoralGardensRadioMessage`)
-4. **Thermal Vents** (`SmallVent`, `VentFall`)
-5. **Kelp Forest Border** (`KelpRandomNode`, `FeatherKelp`)
+
+| Partition / Zone | Evaluated Telemetry Symbols | Approx Depth | Distance & Direction from Pod | Relative to Angel Comb Habitat |
+| :--- | :--- | :--- | :--- | :--- |
+| **Safe Shallows / Pod** | `L_Main`, `Lifepod_SignalOriginal` | ~0m | Origin (`X: 0m, Y: 0m`) | ~238m East |
+| **Angel Comb Habitat** | `CoralGardens`, `BioBed`, `SolarPanel` | ~30m | ~238m West (`X: 0.1m, Y: -237.8m W`) | Core Base Reference Point |
+| **Crashed Black Box** | `CoralGardensRadioMessageBlackBox` | ~45m | ~380m North | ~250m Northeast |
+| **Kelp Forest Border** | `FeatherKelp`, `KelpRandomNode` | ~50m-90m | ~250m-400m West / Southwest | Directly South & Adjacent |
+| **Welcome Center BioLab**| `DA__Signal_WelcomeCent_Hide` | ~60m | ~500m Northwest | ~300m North-Northwest |
+| **Abandoned Basecamp** | `InvesgPOI_PZ_Basecamp`, `ColonistBunker052` | ~70m | ~420m West | ~180m West along canyon shelf |
+| **Thermal Vents** | `SmallVent`, `VentFall` | ~80m-120m | ~450m Northeast / East | ~550m East-Northeast |
 
 ## Narrative Quests
 * **Welcome Center Signal**: `DA__Signal_WelcomeCent_Hide`
@@ -40,10 +45,10 @@ Telemetry engine confirms player traversal across the following core world parti
 * **Base Modules**: `/Game/Art/Bases/BasePieces/Hatch/SM__ASkeletal`, `/Game/Blueprints/BaseBuilding/BP_Hatch_C`, `6Investig_BioBed__CoralGardensRadioMessageBlackBoxbChoi`, `7BioBed_TriggbayInsidChiManifest_DB`, `8Hatch`, `BP_SupplyLocker`, `BP_WorldSupplyLocker`, `BTubaJubileeP_DestroyedBiobed`
 * **Discovered POIs**: `/InvesgPOI_PZ_Basecamp`, `6Investig_BioBed__CoralGardensRadioMessageBlackBoxbChoi`, `6ingBioLab_WelcomeCenter`, `CampOne`, `Lifepod_SignalOriginal`, `P/Narrative//DA__Signal_WelcomeCent_Hide`
 * **World Engine Milestones**: `CrateHasBeenOpe`, `CrateHasBeenOpeItem`, `StartupItemsHaveBeenAdd`, `aFAbandonedBase`, `bStartupItemsHaveBeenAdd`, `bStartupItemsHaveBeenAdded`
-* **Decoded Progression Guide**: [savegame_1_decoded.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups/savegame_1_decoded.md)
+* **Decoded Progression Guide**: [savegame_1_decoded.md](./backups/savegame_1_decoded.md)
 
 ## Graphics Configuration
-Summary extracted from [GameUserSettings.ini](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups/GameUserSettings.ini):
+Summary extracted from [GameUserSettings.ini](./backups/GameUserSettings.ini):
 * **Resolution**: ResolutionSizeX=1280, ResolutionSizeY=720
 * **Frame Rate Cap**: FrameRateLimit=120.000000
 * **Upscaling Quality**: ScalabilityQuality_TSR=3
@@ -52,19 +57,27 @@ Summary extracted from [GameUserSettings.ini](file:///Users/jakegarrison/Downloa
 Snapshot of diagnostic gameplay session events logged by engine:
 
 ```text
-[2026.06.17-06.29.26:083][848]LogBlueprintUserMessages: [WBP_CompilingShadersScreen_C_2147480838] *** DECONSTRUCT
+[2026.06.23-06.04.17:227][969]LogSonarAPI: Warning: Attempting to create an http request without being logged in /a
+[2026.06.23-06.04.18:098][969]LogBlueprintUserMessages: [WBP_CompilingShadersScreen_C_2147480723] *** DECONSTRUCT
 access-control-expose-headers: x-sentry-error,x-sentry-rate-limits,retry-after
-[2026.06.17-06.29.26:278][848]LogMoviePlayer: Shutting down movie player
-[2026.06.17-06.29.26:794][848]LogRHI: FPipelineFileCacheManager Incremental saved 160 total, 13 new, 0 removed, 0 c
-[2026.06.17-06.29.27:175][848]LogHttp: Warning: 	verb=[POST] url=[https://api.live.subnautica.net/api/v1/player/log
+[2026.06.23-06.04.19:986][969]LogMoviePlayer: Shutting down movie player
+[2026.06.23-06.04.20:590][969]LogHttp: Warning: 	verb=[POST] url=[https://api.live.subnautica.net/api/v1/player/log
 ```
 
 ## Reference Links
-* **Master Project Guide**: [README.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/README.md)
-* **Previous Chat Archive**: [subnuatica_2_previous_chat.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups/subnuatica_2_previous_chat.md)
-* **Local Engine Log Dump**: [Subnautica2.log](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups/Subnautica2.log)
-* **Local Backups Vault**: [backups/](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups)
-* **Developer Toolkit**: [Makefile](file:///Users/jakegarrison/Downloads/projects/subnautica-2/Makefile)
-* **Unified Toolkit**: [subnautica_scraper.py](file:///Users/jakegarrison/Downloads/projects/subnautica-2/subnautica_scraper.py)
-* **Project Changelog**: [CHANGELOG.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/CHANGELOG.md)
+* **Progression Guide**: [GUIDE.md](./GUIDE.md)
+* **Progression Roadmap**: [TODO.md](./TODO.md)
+* **Primary Project Guide**: [README.md](./README.md)
+* **Multiplayer Cloud SOP**: [MULTIPLAYER.md](./MULTIPLAYER.md)
+* **Previous Chat Archive**: [subnuatica_2_previous_chat.md](./backups/subnuatica_2_previous_chat.md)
+* **Local Engine Log Dump**: [Subnautica2.log](./backups/Subnautica2.log)
+* **Local Backups Vault**: [backups/](./backups)
+* **Developer Toolkit**: [Makefile](./Makefile)
+* **Unified Toolkit**: [subnautica_scraper.py](./subnautica_scraper.py)
+* **Project Changelog**: [CHANGELOG.md](./CHANGELOG.md)
+* **Steam News Hub**: [store.steampowered.com/news/app/1962700](https://store.steampowered.com/news/app/1962700)
+* **Dev Kanban Board**: [subnautica2.nolt.io/kanban](https://subnautica2.nolt.io/kanban)
+* **Official Site News**: [unknownworlds.com/en/news](https://unknownworlds.com/en/news)
+* **Subnautica 2 Official Wiki**: [subnautica.fandom.com/wiki/Subnautica_2](https://subnautica.fandom.com/wiki/Subnautica_2)
+* **Subnautica 2 Interactive Map**: [subnauticamap.io](https://subnauticamap.io)
 * **Official Website**: [subnautica.com](https://subnautica.com)

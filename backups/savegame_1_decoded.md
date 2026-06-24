@@ -1,7 +1,7 @@
 # Subnautica 2 Progression Dump (`savegame_1.sav`)
 
 > [!NOTE]
-> **Binary Save Geometry**: Decoded from `savegame_1.sav` (1,024,440 bytes). Filtered out raw engine serialization artifacts. Total high-fidelity gameplay progression records extracted: **216**.
+> **Binary Save Geometry**: Decoded from `savegame_1.sav` (1,024,440 bytes). Filtered out raw engine serialization artifacts. Total high-fidelity gameplay progression records extracted: **231**.
 
 ## Survival Gear And Tools (`60` detected)
 
@@ -243,4 +243,24 @@
 | `XPrototypeerDied Blackbox .#9` | Narrative And Radio Quests |
 | `dPrototypPlayerDied Blackbox` | Narrative And Radio Quests |
 | `hS8TriggerUnlockStoryGoalAction` | Narrative And Radio Quests |
+
+## Spatial Geometry (`15` detected)
+
+| Extracted Gameplay Register | Domain Classification |
+| :--- | :--- |
+| `BioBed (X=-0, Y=-12081, Z=0) &#124; ~120.8m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-0, Y=-1312, Z=0) &#124; ~13.1m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-0, Y=-422, Z=2) &#124; ~4.2m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-0, Y=135, Z=-0) &#124; ~1.3m dist, -0.0m depth` | Spatial Geometry |
+| `BioBed (X=-0, Y=19197, Z=0) &#124; ~192.0m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-118074, Y=0, Z=-0) &#124; ~1180.7m dist, -0.0m depth` | Spatial Geometry |
+| `BioBed (X=-118074, Y=0, Z=0) &#124; ~1180.7m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-1312, Y=0, Z=-0) &#124; ~13.1m dist, -0.0m depth` | Spatial Geometry |
+| `BioBed (X=-156, Y=-0, Z=0) &#124; ~1.6m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-182372, Y=-0, Z=0) &#124; ~1823.7m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-2, Y=45686, Z=0) &#124; ~456.9m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-381, Y=0, Z=4) &#124; ~3.8m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-8, Y=-381, Z=0) &#124; ~3.8m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=-86913, Y=-0, Z=0) &#124; ~869.1m dist, 0.0m depth` | Spatial Geometry |
+| `BioBed (X=0, Y=-85659, Z=0) &#124; ~856.6m dist, 0.0m depth` | Spatial Geometry |
 
