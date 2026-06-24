@@ -8,88 +8,70 @@ A structured coaching roadmap and systematic exploration checklist for **Subnaut
 
 ---
 
-## 🧭 Exploration Verification SOP ("Closing Out" Areas)
+## 📋 Immediate Action Roadmap (Next Session Focus)
 
-When scouting nearby landmarks, beacons, and biomes, use this Standard Operating Procedure (SOP) before marking an area as **Closed / Fully Explored**:
-1. **Sweep & Scan**: Equip Scanner (`BP_Scanner`) and check all wreckage crates, data terminals, PDA lore logs, and tech fragments.
-2. **Verify Blueprints**: Check your PDA Blueprints tab (`::Unlocked`) to confirm no partial fragments (e.g., 1/2 or 2/3) remain for vehicles or base modules in that zone.
-3. **Telemetry Validation**: Run `make report` to extract world partition strings and confirm StoryGoal trigger completion in `savegame_1_decoded.md`.
+> [!IMPORTANT]
+> **Active Origin**: Starting safely inside **Angel Comb Base** (`~30m depth`) with `2x Salt` in inventory.
 
-### Perimeter Destination Verification Checklists (Granular Closeout Targets)
+### 🚀 Priority 1: Kelp Forest Border Harvest & Scan (`~250m South` | `~50m depth`)
+* [ ] **Harvest Creepvine**: Grab at least **2x Creepvine Seed Clusters** (glowing yellow pods needed for Silicone Rubber / Lubricant) and slash stalks for **Creepvine Leaves** (`FiberMesh`). *Essential for crafting Seaglide!*
+* [ ] **Scan Seaglide (`BP_Seaglide`)**: Sweep shallow seafloor directly under the glowing seed pods. Scan white Alterra equipment boxes for missing Seaglide handlebars/propellers (`3` needed).
+* [ ] **HIGH PRIORITY — Gather Gold & Lead (`Galena Outcrops`)**: 
+  - *How to find & identify*: Look for **dark grey, metallic cube-shaped crystalline rocks** sticking out of ravine walls (unlike brownish Limestone or reddish Sandstone). When cracked, Galena drops either **Lead** or Titanium. Also crack Sandstone/Shale for **Gold** (`BP_Gold`).
+  - *Why this is crucial*: **Lead** builds your **Sonic Resonator** & base foundations; **Gold** crafts **Computer Chips** (needed for base automation & Scanner Room upgrades) and Advanced Wiring Kits. *(Silver Ore: Grab when seen to restock reserves).*
+* [ ] **HIGH PRIORITY — Slice Shelf Bracket Corals (`Table Coral`)**: You haven't been doing this! Use your Survival Knife to slice red/purple/green shelf coral brackets growing horizontally along canyon walls for **Table Coral Samples** (`BP_TableCoral`). *Required to craft Computer Chips and Scanner Room Range Upgrades!*
+* [ ] **Bonus Salt Collection**: Pick up any extra crystalline **Salt deposits** spotted on the seafloor (supplies battery crafting & water purification). *(Note: 2x Salt already saved in base inventory)*.
+* [ ] **HUD Triage**: Confirm `Wu "Wu" Lianghai`, `Old Habitat`, and `Blackbox - Ruby` are marked **Green** / OFF. Set `Blackbox - Wander` to Green once swept.
 
-#### 1. Emergency Lifepod & Starter Shelf (Safe Shallows)
-- **Approx Location**: `~0m depth` | Origin (`X: 0m, Y: 0m`). (Approx `~238m East` of Angel Comb Base).
-- **Status**: **CLOSED**
-- **Verified Blueprints & Equipment**:
-  - [x] Scanner (`BP_Scanner`) & Habitat Builder (`BP_Builder`)
-  - [x] Flashlight (`Tools_Flashlight`) & Small Oxygen Tank (`BP_OxygenTank_Small`)
-  - [x] Survival Knife (`BP_Knife`) & Standard Metal Salvage (`BP_MetalSalvage`)
-- **Verified Flora Scans**: Acid Anemone (`BP_AcidAnemone`) & Coral Sea Whip (`BP_CoralSeaWhip`).
+### 🏠 Priority 2: Base Assembly & Power Network (Angel Comb Base)
+* [ ] **Deploy Hydroelectric Turbine**: Place your newly unlocked **Hydroelectric Turbine** (`HydroelectricTurbine`) in the bubbling hydrothermal vent current near your base to generate continuous renewable energy.
+* [ ] **Connect Power Transmitter**: Deploy a **Power Transmitter** (`BP_PowerTransmitter`) to relay remote thermal current back to your base corridors.
+* [ ] **Construct Bioreactor**: Build an interior **Bioreactor** (`BP_Bioreactor`) inside your multipurpose room to supplement solar/hydro power.
+* [ ] **Craft Seaglide & Repair Tool**: Using gathered Creepvine materials, craft your **Seaglide** (`BP_Seaglide`) and **Repair Tool** (`BP_RepairTool`) at your interior Fabricator.
+* [ ] **Scanner Room Upgrades** *(Along the way bonus)*: Craft **Scanner Room Range Upgrades** (`BP_ScannerRoomUpgrade_Range`) at your Fabricator using Copper + Table Coral to expand radar coverage across the entire 400m perimeter.
 
-#### 2. Angel Comb Starter Base (Infected Crevasse Shelf)
-- **Approx Location**: `~30m depth` | `~238m West` of Lifepod (`X: 0.1m, Y: -237.8m W`). (Core Habitat Origin).
-- **Status**: **CLOSED (Core Habitat)**
-- **Verified Base Modules & Construction**:
-  - [x] Starter Multipurpose Room built near Angel Comb thermal current.
-  - [x] Side Hatch (`BP_Hatch`) attached and ~5 Solar Panels deployed on roof for continuous power/oxygen.
-  - [x] Interior Bed (`BioBed`) installed and Wall Lockers (`BP_WorldSupplyLocker`) constructed and stocked with Silver, Titanium, Copper, Quartz, and Lead.
-
-#### 3. Crashed Black Box (Alterra Emergency Signal)
-- **Approx Location**: `~45m depth` | `~380m North` of Lifepod (`~250m Northeast` of Angel Comb Base).
-- **Status**: **IN PROGRESS**
-- **Granular Verification Targets**:
-  - [ ] **Blueprints / Tech**: Scan Light Stick / Floodlight fragments and Bar Table / Bench decorative furniture blueprints scattered around the crashed recorder. *(Verify 100% scanned!)*
-  - [~] **PDA Lore / Audio Logs**: Emergency Radio Transmission Audio Log retrieved. *(Verify 100% via Databank tab)*.
-  - [ ] **Scraps**: Salvage all nearby Titanium cargo crates and copper wire nodes.
-
-#### 4. Welcome Center & BioLab Facility (Alterra Research Outpost)
-- **Approx Location**: `~60m depth` | `~500m Northwest` of Lifepod (`~300m North-Northwest` of Angel Comb Base).
-- **Status**: **NEEDS VERIFICATION (100%)**
-- **Granular Verification Targets**:
-  - [ ] **Blueprints / Tech**: Scan BioLab Lab Counter, Specimen Analyzer, Glass Desk, Office Chair, and Chemical Storage Locker blueprints inside the laboratory chambers. *(Verify 100%!)*
-  - [ ] **Equipment Data**: Research High Capacity Oxygen Tank blueprint data terminal.
-  - [ ] **PDA Lore / Audio Logs**: Collect Welcome Center Log #1 (Research Objectives), BioLab Containment Breach Datapad, and Chief Scientist Audio Log. *(Manual check required)*.
-  - [ ] **Scan Targets**: Specimen containment cylinders, automated centrifuge, Alterra security bulkhead doors.
-
-#### 5. Abandoned Basecamp & Habitat Beacon (Infected Crevasse Wreckage)
-- **Approx Location**: `~70m depth` | `~420m West` of Lifepod (`~180m West` of Angel Comb Base along canyon shelf).
-- **Status**: **NEEDS VERIFICATION (100%)**
-- **Granular Verification Targets**:
-  - [ ] **Blueprints / Tech**: Scan Multipurpose Room fragments (if partial), Composite Corridor sections, Exterior Growbed / Planter Box, Floodlight (`BP_Floodlight`), and Battery Charger fragments (requires 2 scans). *(Verify 100%!)*
-  - [~] **PDA Lore / Logs**: Colonist Bunker Pad #052 extracted. *(Verify 100% via Databank tab)*.
-  - [ ] **Scan Targets**: Damaged Alterra base modules, whiteboards, broken solar arrays.
-
-#### 6. Kelp Forest Border & Crevasse Ravines (Creepvine Forests)
-- **Approx Location**: `~50m-90m depth` | `~250m-400m W/SW` of Lifepod (Directly `South & adjacent` to Angel Comb Base).
-- **Status**: **SCOUTED / UNCRAFTED**
-- **Granular Verification Targets**:
-  - [ ] **Vehicle Blueprints**: Locate and scan all 3 **Seaglide** (`BP_Seaglide`) vehicle fragments along Kelp ravines.
-  - [ ] **Submersible Tech**: Scan Mobile Vehicle Bay fragments (1/3, 2/3, 3/3) and Bioreactor fragments.
-  - [ ] **Resource Harvesting**: Collect Creepvine Seed Clusters (bioluminescent yellow pods) for Silicone Rubber / Lubricant and slash stalks for Creepvine Leaves (`FiberMesh`).
-
-#### 7. Thermal Vents & Hydrothermal Fissures (Volcanic Trenches)
-- **Approx Location**: `~80m-120m depth` | `~450m NE/E` of Lifepod (`~550m ENE` of Angel Comb Base).
-- **Status**: **SCOUTED / UNCLOSED**
-- **Granular Verification Targets**:
-  - [ ] **Power Blueprints**: Scan Thermal Plant fragments and Power Transmitter (`BP_PowerTransmitter`) fragments near active volcanic vents.
-  - [ ] **Station Tech**: Scan Vehicle Modification Station fragments.
-  - [ ] **Mineral Scouting**: Identify and harvest Magnetite and crystalline Lithium deposits surrounding hydrothermal fissures.
+### 🏊‍♂️ Priority 3: Wreckage Sweep Circuit (Camp One & BioLab Hangar)
+* [ ] **Stop 1: Camp One Wreckage** *(Swim ~180m West | ~70m depth)*:
+  - Search open white Alterra cargo crates sitting in the sand directly outside the bunker entrance to scan remaining **Repair Tool** (`BP_RepairTool`) fragments (`+1` left for 3/3).
+  - Search roughly `~30m South/West` of the bunker doors among broken docking rings / thruster pods for **Tadpole Submersible** (`BP_Tadpole`) fragments (`+1` left for 3/3).
+  - Check small tripod **Work Light** (`BP_WorkLight`) posts lying in the sand near the hatch (`+1` or `+2` left).
+  - Inspect interior wall storage compartments inside damaged habitat tubes for **Wall Rack** (`BP_WallRack`) fragments (`+2` left).
+  - *Along the way bonus*: Scan broken **Battery Charger** (`BP_BatteryCharger`) terminals on bunker walls (`2` scans needed to unlock battery recharging).
+  - *HUD Triage*: Once swept, set `Camp One` Beacon to **Green** (or toggle OFF).
+* [ ] **Stop 2: Welcome Center BioLab Hangar** *(Swim ~300m NNW | ~60m depth)*:
+  - Check inside crashed BioLab moonpool hangar bay (water-level catwalks) or split yellow shipping containers along the shelf for any missed **Tadpole Submersible** fragments (`+1` left).
+  - *Along the way bonus*: Keep an eye out for floating **Mobile Vehicle Bay** (`BP_MobileVehicleBay`) deployment consoles along the 100m drop-off shelf.
+  - *HUD Triage*: Confirm `Welcome Center`, `Blackbox - Anita`, and `Blackbox - Chap` are set to **Green** / OFF.
 
 ---
 
-## 📋 Action Roadmap
+## 🧭 Exploration Verification SOP ("Closing Out" & Disabling Signals)
 
-> [!IMPORTANT]
-> **Milestone Lifecycle**: When a coaching milestone under **Pending Focus** is completed and verified against live save telemetry, remove it from this file and record its completed details as a new entry in [CHANGELOG.md](./CHANGELOG.md). Keep `TODO.md` focused strictly on immediate actionable tasks and exploration closeouts.
+Before marking an area as **Closed / Fully Explored** and toggling OFF its HUD Beacon in your PDA Signals tab, verify against these 3 concrete pieces of evidence:
+1. **Telemetry StoryGoal Trigger (`_Hide`)**: Check [savegame_1_decoded.md](./backups/savegame_1_decoded.md#L227). When you interact with a major signal's core terminal, the engine records `DA__Signal_..._Hide`. If `_Hide` is present, the primary narrative objective is 100% complete.
+2. **Zero Partial Blueprints (No Leftover Crates)**: Open your PDA **Blueprints** tab under `In Progress`. If you have unresolved fractions (like `2/3 Repair Tool`, `2/3 Tadpole`), wreckage sites you previously visited still contain un-scanned cargo crates!
+3. **Sealed Bulkhead Audit (Laser Cutter Check)**: Many crashed Alterra structures contain sealed titanium bulkhead doors requiring a **Laser Cutter** (`BP_LaserCutter`). Do not disable its signal until you return with a cutting tool!
 
-Immediate things to craft, gather, and verify—sequenced logically for an efficient geographic sweep.
+### Active Perimeter Destination Tracker
 
-### Pending Focus (Geographic Sweep Sequence)
+#### 1. Crashed Black Box (Alterra Emergency Signal)
+- **Approx Location**: `~45m depth` | `~380m North` of Lifepod (`~250m Northeast` of Angel Comb Base).
+- **Status**: **IN PROGRESS**
+  - [ ] Scan Light Stick / Floodlight fragments and Bar Table / Bench decorative furniture blueprints.
+  - [~] Emergency Radio Transmission Audio Log retrieved. *(Verify via Databank tab)*.
+  - [ ] Salvage nearby Titanium cargo crates and copper wire nodes.
 
-* [ ] **TODO-17 (Base Workshop & Repair Tool)** *(Location: Angel Comb Base)*: Construct an interior **Fabricator** (`BP_Fabricator`). Gather Cave Sulfur + Titanium + Wiring Kit to craft a **Repair Tool** (`BP_RepairTool`) to maintain habitat integrity.
-* [ ] **TODO-16 (South Sweep: Kelp Resource Harvest & Seaglide)** *(Location: ~250m South)*: Swim south to the Kelp Forest border (`FeatherKelp`). Gather **Creepvine Seed Clusters** (`CreepvineSeedCluster`) for Lubricant/Silicone and slash stalks for **Creepvine Leaves** (`FiberMesh`). Scan remaining **Seaglide** fragments (3 total) and craft it upon returning to base.
-* [ ] **TODO-15 (Base Agriculture & Pressure Gear)** *(Location: Angel Comb Base)*: Deploy an **Exterior Growbed** outside your base hatch to farm Creepvine locally. Upgrade your Small O₂ Tank to a **High Capacity O₂ Tank** (+90 max O₂) and craft a **Rebreather** (Wiring Kit + Fiber Mesh).
-* [ ] **TODO-14 (North Sweep: Shallow Reef & Laser Cutter)** *(Location: ~350m North / Northeast)*: Using your Seaglide, harvest **Table Coral** (`TableCoral`) along shallow ledges and mine deeper Sandstone outcrops (>50m depth) for **Gold** (`DA_Gold`) and **Diamonds**. Craft a **Laser Cutter** (`BP_LaserCutter`) at your workshop.
-* [ ] **TODO-13 (Base Utility & Storage Expansion)** *(Location: Angel Comb Base)*: Construct an interior **Battery Charger** (once scanned) to recycle batteries. Attach an adjacent Multipurpose Room dedicated to labeled Wall Lockers (`BP_WorldSupplyLocker`) and attach a **Scanner Room** (`BP_ScannerRoom`) with Range Upgrades.
-* [ ] **TODO-12 (Clockwise Wreckage Closeout Sweep)** *(Location: Perimeter Wreckage Loop)*: Execute a continuous Seaglide sweep across **Crashed Black Box** (~380m N) → **Welcome Center BioLab** (~500m NW) → **Abandoned Basecamp** (~420m W). Slice open sealed bulkheads with your Laser Cutter, scan remaining Battery Charger fragments, and verify 100% blueprint capture.
-* [ ] **TODO-11 (Visual Telemetry via Screenshots)** *(Location: Ongoing)*: Capture in-game screenshots of your **PDA Blueprints tab** (recording partial fragment scanning progress like 1/3 Seaglide or 1/2 Battery Charger) and **Base Storage Lockers** (showing per-container inventories). Share or drop these screenshots directly in chat for 100% AI vision verification!
+#### 2. Abandoned Basecamp & Habitat Beacon (Infected Crevasse Wreckage)
+- **Approx Location**: `~70m depth` | `~420m West` of Lifepod (`~180m West` of Angel Comb Base along canyon shelf).
+- **Status**: **NEEDS VERIFICATION (100%)**
+  - [ ] Scan Multipurpose Room fragments (if partial), Composite Corridor sections, Exterior Growbed, Floodlight, and Battery Charger fragments.
+  - [~] Colonist Bunker Pad #052 extracted. *(Verify via Databank tab)*.
+
+#### 3. Thermal Vents & Hydrothermal Fissures (Volcanic Trenches)
+- **Approx Location**: `~80m-120m depth` | `~450m NE/E` of Lifepod (`~550m ENE` of Angel Comb Base).
+- **Status**: **SCOUTED / UNCLOSED**
+  - [ ] Scan Thermal Plant fragments and Power Transmitter fragments near active volcanic vents.
+  - [ ] Scan Vehicle Modification Station fragments.
+  - [ ] Identify and harvest Magnetite and crystalline Lithium deposits surrounding hydrothermal fissures.
+
+* **Visual Telemetry via Screenshots**: Capture in-game screenshots of your **PDA Blueprints tab** and **Base Storage Lockers**. Share or drop these screenshots directly in chat for 100% AI vision verification!
