@@ -16,7 +16,7 @@ A structured coaching roadmap and systematic exploration checklist for **Subnaut
 ### 🚀 Priority 1: Kelp Forest Border Harvest & Scan (`~250m South` | `~50m depth`)
 * [ ] **Harvest Creepvine**: Grab at least **2x Creepvine Seed Clusters** (glowing yellow pods needed for Silicone Rubber / Lubricant) and slash stalks for **Creepvine Leaves** (`FiberMesh`). *Essential for crafting Seaglide!*
 * [ ] **Scan Seaglide (`BP_Seaglide`)**: Sweep shallow seafloor directly under the glowing seed pods. Scan white Alterra equipment boxes for missing Seaglide handlebars/propellers (`3` needed).
-* [ ] **HIGH PRIORITY — Gather Gold & Lead (`Galena Outcrops`)**: 
+* [ ] **HIGH PRIORITY — Gather Gold & Lead (`Galena Outcrops`)**:
   - *How to find & identify*: Look for **dark grey, metallic cube-shaped crystalline rocks** sticking out of ravine walls (unlike brownish Limestone or reddish Sandstone). When cracked, Galena drops either **Lead** or Titanium. Also crack Sandstone/Shale for **Gold** (`BP_Gold`).
   - *Why this is crucial*: **Lead** builds your **Sonic Resonator** & base foundations; **Gold** crafts **Computer Chips** (needed for base automation & Scanner Room upgrades) and Advanced Wiring Kits. *(Silver Ore: Grab when seen to restock reserves).*
 * [ ] **HIGH PRIORITY — Slice Shelf Bracket Corals (`Table Coral`)**: You haven't been doing this! Use your Survival Knife to slice red/purple/green shelf coral brackets growing horizontally along canyon walls for **Table Coral Samples** (`BP_TableCoral`). *Required to craft Computer Chips and Scanner Room Range Upgrades!*
