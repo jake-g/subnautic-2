@@ -11,7 +11,7 @@ A structured coaching roadmap and systematic exploration checklist for **Subnaut
 ## 📋 Sequenced Action Roadmap (Next Session Focus)
 
 > [!IMPORTANT]
-> **Active Origin**: Starting safely inside **Angel Comb Base** (`~30m depth`) with a functional power grid (6 Solar, 3 Hydro Turbines), Biolab, Processor, and Scanner Station.
+> **Active Origin**: Starting safely inside **Angel Comb Base** (`~30m depth`) with a functional power grid (6 Solar, 3 Hydro Turbines), Biolab, Processor, Scanner Station, Moonpool (with Tadpole Dock), Battery Charger, and Power Wall.
 
 ### 📍 Step 1: Scanner Room Calibration & visor HUD Setup
 * [ ] **Harvest Table Coral & Copper**: Use your Survival Knife on canyon walls to slice red/green shelf corals for **Table Coral Samples** (`BP_TableCoral`). Gather Copper.
@@ -20,26 +20,29 @@ A structured coaching roadmap and systematic exploration checklist for **Subnaut
   - [ ] Craft the **Scanner Room HUD Chip** at the Fabricator and equip it. *This highlights scanned resources directly on your visor!*
 * [ ] **Locate Key Materials**: Set Scanner Room to target **Galena Outcrops** (for Lead) and **Table Coral** to stock up on building materials.
 
-### 🏊‍♂️ Step 2: Wreckage Clean-up & Blueprint Close-out
-Set your Scanner Room to target **Technology Fragments** to pinpoint these items:
-* [ ] **Close out Camp One Wreckage** *(Swim ~180m West | ~70m depth)*:
-  - [ ] Scan final **Repair Tool** (`BP_RepairTool`) fragment (2/3 completed, `+1` left). *Then craft it at your Fabricator!*
-  - [ ] Scan final **Work Light** (`BP_WorkLight`) fragment (1/2 completed, `+1` left).
-  - [ ] Scan remaining **Wall Rack** (`BP_WallRack`) fragments (1/3 completed, `+2` left).
-  - [ ] Scan broken **Battery Charger** (`BP_BatteryCharger`) terminals on bunker walls (`2` scans needed to unlock battery recharging).
-  - [ ] Set Camp One Beacon to **Green** / OFF once clear.
-* [ ] **Scan Mobile Vehicle Bay Fragments**: Check along the 100m shelf border and near the Welcome Center BioLab hangar for floating **Mobile Vehicle Bay** (`BP_MobileVehicleBay`) consoles. Scan to unlock.
+### 🏊‍♂️ Step 2: Basic Tools & Utility Blueprint Close-out
+Set your Scanner Room to target **Technology Fragments** to locate these missing blueprints:
+* [ ] **Repair Tool** (`BP_RepairTool`) — *(2/3 fragments, `+1` left)*
+  * **Quick Location**: **Camp One Wreckage** (~180m West | ~70m depth). Search inside the metal wreckage corridors and on shelves.
+* [ ] **Work Light** (`BP_WorkLight`) — *(1/2 fragments, `+1` left)*
+  * **Quick Location**: **Camp One Wreckage** (~180m West | ~70m depth) or inside cargo crates immediately outside the site.
+* [ ] **Seaglide** (`BP_Seaglide`) — *(Not yet unlocked)*
+  * **Quick Location**: **Kelp Forest Biome** (~250m–400m West/Southwest | ~50m–90m depth). Look on the grassy seabed and around the roots of Creepvines.
+* [ ] **Laser Cutter** (`BP_LaserCutter`) — *(Not yet unlocked)*
+  * **Quick Location**: Search in deep metal cargo crates surrounding the **Crashed Black Box** area (~380m North | ~45m depth).
+* [ ] **Rebreather** — *(Not yet unlocked)*
+  * **Quick Location**: Inspect data consoles and equipment lockers inside the **Welcome Center BioLab** (~500m Northwest | ~60m depth).
+* [ ] **Wall Rack** (`BP_WallRack`) — *(1/3 fragments, `+2` left)*
+  * **Quick Location**: Camp One Wreckage module walls and shelves.
+* [ ] Set Camp One Beacon to **Green** / OFF once clear.
 
 ### 🏗️ Step 3: Vehicle Construction & Refinement
-* [ ] **Process Advanced Alloys**: Gather raw Titanium and Germanium, and use your base **Processor** to refine:
-  - [ ] **Titanium Ingots**
-  - [ ] **Germanium Ingots**
-* [ ] **Build & Deploy Mobile Vehicle Bay**: Craft at the Fabricator, take it to the surface, and deploy it.
-* [ ] **Build Tadpole Submersible**: Use the Mobile Vehicle Bay to construct your unlocked **Tadpole Submersible** (`BP_Tadpole`).
+* [ ] **Build Moonpool Vehicle Fabricator**: Establish a fabricator inside the Moonpool. *(Requires expanding/relocating Moonpool to a deeper water/high-clearance zone to fit the fabricator/sub).*
+* [ ] **Build Tadpole Submersible** (`BP_Tadpole`): Build at the Moonpool Vehicle Fabricator.
+* [ ] **Scan Vehicle Modification Station fragments**: Search for fragments to construct the wall-mounted console.
 
 ### 🧭 Step 4: Deeper Exploration Transition
 * [ ] **Search for Dive Elevator**: Sweep the Thermal Vents border and deeper areas for the remaining **Dive Elevator** (`BP_DiveElevator`) fragment (1/2 completed, `+1` left) to enable easy vertical transport to deeper biomes.
-* [ ] **HUD Triage**: Toggle OFF/Green any cleared beacons (`Wu Lianghai`, `Old Habitat`, `Blackbox - Ruby`, `Camp One`) to keep your compass clean.
 
 ---
 
@@ -54,25 +57,18 @@ Before marking an area as **Closed / Fully Explored** and toggling OFF its HUD B
 
 #### 1. Crashed Black Box (Alterra Emergency Signal)
 - **Approx Location**: `~45m depth` | `~380m North` of Lifepod (`~250m Northeast` of Angel Comb Base).
-- **Status**: **IN PROGRESS**
+- **Status**: **IN PROGRESS** (Partially Explored)
   - [ ] Scan Light Stick / Floodlight fragments and Bar Table / Bench decorative furniture blueprints.
-  - [~] Emergency Radio Transmission Audio Log retrieved. *(Verify via Databank tab)*.
   - [ ] Salvage nearby Titanium cargo crates and copper wire nodes.
 
-#### 2. Abandoned Basecamp & Habitat Beacon (Infected Crevasse Wreckage)
-- **Approx Location**: `~70m depth` | `~420m West` of Lifepod (`~180m West` of Angel Comb Base along canyon shelf).
-- **Status**: **NEEDS VERIFICATION (100%)**
-  - [ ] Scan Multipurpose Room fragments (if partial), Composite Corridor sections, Exterior Growbed, Floodlight, and Battery Charger fragments.
-  - [~] Colonist Bunker Pad #052 extracted. *(Verify via Databank tab)*.
-
-#### 3. Thermal Vents & Hydrothermal Fissures (Volcanic Trenches)
+#### 2. Thermal Vents & Hydrothermal Fissures (Volcanic Trenches)
 - **Approx Location**: `~80m-120m depth` | `~450m NE/E` of Lifepod (`~550m ENE` of Angel Comb Base).
 - **Status**: **SCOUTED / UNCLOSED**
   - [ ] Scan Thermal Plant fragments and Power Transmitter fragments near active volcanic vents.
   - [ ] Scan Vehicle Modification Station fragments.
   - [ ] Identify and harvest Magnetite and crystalline Lithium deposits surrounding hydrothermal fissures.
 
-#### 4. Tadpole Pens (New Narrative Outpost)
+#### 3. Tadpole Pens (New Narrative Outpost)
 - **Approx Location**: Unlocked via PDA story goal (`DA_StoryGoal_Investigation_TadpolePensNoA`).
 - **Status**: **UNEXPLORED**
   - [ ] Explore the Tadpole Pens area and scan technology fragments.

@@ -545,6 +545,30 @@ def pull_remote_engine_log() -> None:
       f.write(process.stdout)
 
 
+def parse_game_user_settings(ini_path: str) -> Dict[str, str]:
+  """Parses GameUserSettings.ini and extracts resolution and frame rate settings."""
+  results = {
+      "ResolutionSizeX": "3840",
+      "ResolutionSizeY": "2160",
+      "LastUserConfirmedResolutionSizeX": "1280",
+      "LastUserConfirmedResolutionSizeY": "720",
+      "FrameRateLimit": "120.000000",
+      "TSRQualityMode": "3",
+  }
+  if not os.path.exists(ini_path):
+    return results
+  with open(ini_path, "r", encoding="utf-8") as f:
+    for line in f:
+      line = line.strip()
+      if "=" in line and not line.startswith(";"):
+        key, val = line.split("=", 1)
+        key = key.strip()
+        val = val.strip()
+        if key in results:
+          results[key] = val
+  return results
+
+
 def format_markdown_report(data: Dict[str, Any], git_hash: str) -> str:
   """Synthesizes telemetry data into structured diagnostic markdown report."""
   save_files = data.get("save_files", [])
@@ -618,6 +642,19 @@ def format_markdown_report(data: Dict[str, Any], git_hash: str) -> str:
   makefile_path = os.path.join(WORKSPACE_ROOT, "Makefile")
   scraper_path = os.path.abspath(__file__)
 
+  settings = parse_game_user_settings(ini_path)
+  res_x = settings.get("ResolutionSizeX", "3840")
+  res_y = settings.get("ResolutionSizeY", "2160")
+  last_confirm_x = settings.get("LastUserConfirmedResolutionSizeX", "1280")
+  last_confirm_y = settings.get("LastUserConfirmedResolutionSizeY", "720")
+  frame_rate = settings.get("FrameRateLimit", "120.000000")
+  tsr_mode = settings.get("TSRQualityMode", "3")
+
+  is_streaming = (res_x == "1280" and
+                  res_y == "720") or (last_confirm_x == "1280" and
+                                      last_confirm_y == "720")
+  session_type = "Streaming Session (Steam Remote Play / Cloud)" if is_streaming else "Direct PC Session"
+
   report = f"""# Subnautica 2 Telemetry Report
 
 Live progression telemetry and configuration summary generated via SSH from gaming rig `{PC_SSH_HOST}`. All binary saves and plaintext configs are mirrored locally in `backups/`.
@@ -628,7 +665,7 @@ Live progression telemetry and configuration summary generated via SSH from gami
 * **Platform Provider**: Steam (`OnlineSubsystemSteam` | Player ID `76561198797039235`)
 * **Active Save File**: `savegame_1.sav` ({main_size_kb} | Last Saved: `{main_mod}`)
 * **Auto-Save State**: **Enabled** (`UWESaveSystemUserSetting.ini` | `bAutoSaveEnabled=True`)
-* **Display Config**: `1280x720` dynamic render resolution scaling to `3840x2160` output (TSR Upscaling Quality Mode 3 | FPS Cap: 120)
+* **Display Config**: `{res_x}x{res_y}` ({session_type} | FPS Cap: {float(frame_rate):.0f})
 * **Remote Git Repository**: `{REMOTE_SAVE_DIR}/.git/` (Pristine tree `{git_hash}`)
 * **Save Directory**: `C:/Users/jake/AppData/Local/Subnautica2/Saved/SaveGames/`
 * **Log File**: `C:/Users/jake/AppData/Local/Subnautica2/Saved/Logs/Subnautica2.log`
@@ -673,9 +710,9 @@ Telemetry engine confirms player traversal across the following core world parti
 
 ## Graphics Configuration
 Summary extracted from [GameUserSettings.ini](./backups/GameUserSettings.ini):
-* **Resolution**: ResolutionSizeX=1280, ResolutionSizeY=720
-* **Frame Rate Cap**: FrameRateLimit=120.000000
-* **Upscaling Quality**: ScalabilityQuality_TSR=3
+* **Resolution**: ResolutionSizeX={res_x}, ResolutionSizeY={res_y} (Last Confirmed: {last_confirm_x}x{last_confirm_y})
+* **Frame Rate Cap**: FrameRateLimit={frame_rate}
+* **Upscaling Quality**: ScalabilityQuality_TSR={tsr_mode}
 
 ## Recent Engine Events
 Snapshot of diagnostic gameplay session events logged by engine:
