@@ -807,45 +807,9 @@ def update_official_changelog_from_rss() -> None:
     clean_title = s['milestone'].replace("[Game Update] ", "")
     table_body += f"| {date_field} | {clean_title} | {s['summary']} | {s['status']} |\n"
 
-  # Build Mermaid timeline for official updates
-  mermaid_code = """```mermaid
-graph TD
-    %% Styling
-    classDef update fill:#2d3748,stroke:#319795,stroke-width:2px,color:#fff;
-
-    Start[Early Access Launch: 2026-05-14]"""
-
-  last_node = "Start"
-  node_counter = 1
-  node_styles = []
-
-  # Sort chronologically for the timeline (oldest first)
-  chrono_updates = list(reversed(game_updates))
-  for ev in chrono_updates:
-    node_id = f"U{node_counter}"
-    node_counter += 1
-
-    title = ev["milestone"].replace("[Game Update] ", "")
-    clean_title = title.replace("\"", "'")
-    if len(clean_title) > 40:
-      clean_title = clean_title[:37] + "..."
-
-    display_date = ev["date"].split(" ")[0]
-
-    mermaid_code += f"\n    {last_node} --> {node_id}[\"{display_date}: {clean_title}\"]"
-    node_styles.append(f"    class {node_id} update;")
-    last_node = node_id
-
-  mermaid_code += "\n\n" + "\n".join(node_styles)
-  mermaid_code += "\n```"
-
   content = f"""# Subnautica 2 Official Game Changelog
 
 This ledger tracks the official game updates, hotfixes, and dev logs released by Unknown Worlds for **Subnautica 2** (Early Access). Automatically synchronized via Steam RSS feed.
-
-## 🗺️ Official Update Timeline
-
-{mermaid_code}
 
 ## 📋 Official Updates Ledger
 

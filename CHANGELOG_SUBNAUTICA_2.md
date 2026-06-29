@@ -2,37 +2,6 @@
 
 This ledger tracks the official game updates, hotfixes, and dev logs released by Unknown Worlds for **Subnautica 2** (Early Access). Automatically synchronized via Steam RSS feed.
 
-## 🗺️ Official Update Timeline
-
-```mermaid
-graph TD
-    %% Styling
-    classDef update fill:#2d3748,stroke:#319795,stroke-width:2px,color:#fff;
-    
-    Start[Early Access Launch: 2026-05-14]
-    Start --> U1["2026-05-09: Subnautica 2 Early Access Gameplay Tr..."]
-    U1 --> U2["2026-05-11: A Thank You to Our Community for 5 Mi..."]
-    U2 --> U3["2026-05-11: Pre-purchase and Pre-load Subnautica ..."]
-    U3 --> U4["2026-05-14: Subnautica 2 Early Access Released"]
-    U4 --> U5["2026-05-15: Subnautica 2 Early Access Roadmap"]
-    U5 --> U6["2026-05-19: Subnautica 2 Early Access Hotfix 1"]
-    U6 --> U7["2026-05-20: A Letter to the Community from the Su..."]
-    U7 --> U8["2026-05-22: Subnautica 2 Early Access Hotfix 2"]
-    U8 --> U9["2026-06-01: Subnautica 2 Early Access Hotfix 3"]
-    U9 --> U10["2026-06-04: Dev Vlog - Swimming Forward"]
-
-    class U1 update;
-    class U2 update;
-    class U3 update;
-    class U4 update;
-    class U5 update;
-    class U6 update;
-    class U7 update;
-    class U8 update;
-    class U9 update;
-    class U10 update;
-```
-
 ## 📋 Official Updates Ledger
 
 | Date | Update | Summary | Link |
@@ -47,4 +16,3 @@ graph TD
 | **2026-05-11 15:03:32** | Pre-purchase and Pre-load Subnautica 2 Early Access Starting Today! | Official Subnautica 2 release/news update: Pre-purchase and Pre-load Subnautica 2 Early Access Starting Today!. See Steam link. | [Steam News](https://store.steampowered.com/news/app/1962700/view/655979911377323530) |
 | **2026-05-11 13:00:15** | A Thank You to Our Community for 5 Million Wishlists | Official Subnautica 2 release/news update: A Thank You to Our Community for 5 Million Wishlists. See Steam link. | [Steam News](https://store.steampowered.com/news/app/1962700/view/655979911377323528) |
 | **2026-05-09 18:05:35** | Subnautica 2 Early Access Gameplay Trailer Released! | Official Subnautica 2 release/news update: Subnautica 2 Early Access Gameplay Trailer Released!. See Steam link. | [Steam News](https://store.steampowered.com/news/app/1962700/view/655979911377323201) |
-
