@@ -14,13 +14,37 @@ Curated community wisdom and essential beginner mechanics (strictly filtered to 
 - **Scanner Room Overdrive**: Attaching an adjacent Scanner Room (`BP_ScannerRoom`) and equipping it with 4x Range Upgrades transforms your starter base into an automated radar network, highlighting local limestone/sandstone nodes and unmapped wreck fragments through canyon walls.
 - **Stow Before You Go**: Dedicate 1 empty Wall Locker entirely to quick-drop loot. Before scouting perimeter wreckage (>400m away), deposit all non-essential ores and spare tools so you have 100% free inventory slots for Titanium salvage and tech blueprints.
 - **Dive Envelope Discipline**: Never descend below your current oxygen tank's comfortable dive envelope (100m depth for Standard Tank) without a Rebreather and a Seaglide. Swimming vertically without a submersible vehicle consumes excessive oxygen during emergency ascents.
-- **HUD Signal Triage**: Keep core reference beacons active (**Lifepod**, **Angel Comb Base**, custom Beacons) in your PDA Signals menu, but disable investigated wreckage and cleared story signals (**Welcome Center**, **Blackbox** beacons, **Camp One**) once fully scouted so your compass remains clean.
+- **HUD Signal Triage**: Keep core reference beacons active (**Lifepod**, **Angel Comb Base**, custom Beacons) in your PDA Signals menu, but disable investigated wreckage and cleared story signals (**Welcome Center**, **Blackbox** beacons, **Camp One**) once fully scouted so your compass remains clean. 
 
 ---
 
 ## 🪜 High-Level Progression Sequence (Spoiler-Free)
 
 A macro-level sequence of major progression tiers across the game. For immediate actionable execution checklists and specific item targets, refer to [TODO.md](./TODO.md).
+
+```mermaid
+graph TD
+    classDef active fill:#1a365d,stroke:#3182ce,stroke-width:2px,color:#fff;
+    classDef locked fill:#2d3748,stroke:#4a5568,stroke-width:1px,color:#a0aec0;
+    classDef criteria fill:#2c3e50,stroke:#18bc9c,stroke-width:1px,color:#fff;
+
+    P1[Phase 1: Surface & Perimeter<br/>0m - 100m]:::active
+    P2[Phase 2: Medium-Depth Scouting<br/>100m - 300m]:::locked
+    P3[Phase 3: Deep Expanse<br/>300m - 600m+]:::locked
+    P4[Phase 4: Abyssal Trenches<br/>600m - 1000m+]:::locked
+
+    P1 -->|Transition Criteria| P2
+    P2 -->|Deep Hull & Thermal Power| P3
+    P3 -->|Abyssal Hulls & Precursor Alloys| P4
+
+    subgraph Phase 1 Transition Criteria
+        C1[Seaglide Assembled]:::criteria
+        C2[High Capacity O2 Tank]:::criteria
+        C3[Rebreather Equipped]:::criteria
+        C4[Interior Fabricator Built]:::criteria
+    end
+    C1 & C2 & C3 & C4 -.-> P1
+```
 
 ### 1. Phase 1: Surface & Perimeter Survival (0-100m) *(Current Phase)*
 - **Core Objectives**: Establish starter habitat base (Angel Comb), craft core hand tools (`BP_Builder`, `BP_RepairTool`, `BP_LaserCutter`), equip depth survival gear (High Capacity O₂ Tank, Rebreather), assemble your rapid traversal vehicle (`BP_Seaglide`), and verify 100% blueprint capture across nearby Alterra emergency beacons.

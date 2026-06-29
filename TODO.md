@@ -75,3 +75,13 @@ Before marking an area as **Closed / Fully Explored** and toggling OFF its HUD B
   - [ ] Locate the source of the story goal transmission.
 
 * **Visual Telemetry via Screenshots**: Capture in-game screenshots of your **PDA Blueprints tab** and **Base Storage Lockers**. Share or drop these screenshots directly in chat for 100% AI vision verification!
+
+---
+
+## 🛠️ Repository Maintenance & Save Hygiene
+
+Keep the save backup vault and progression reports synchronized by incorporating these steps into your play sessions:
+* [ ] **Pre-Session Pull**: Run `make pull` before starting the game to ensure your local backup vault has the latest remote files.
+* [ ] **Post-Session Snapshot**: Run `make snapshot` immediately after exiting the game. This commits the latest save state (`savegame_1.sav`) and logs to the remote Git repository and updates [REPORT.md](./REPORT.md).
+* [ ] **Co-op Sync Check**: If playing co-op, follow the **Locker Drop** protocol in [MULTIPLAYER.md](./MULTIPLAYER.md) before exporting or importing any 8-digit share codes.
+* [ ] **Diagram Updates**: As you transition to **Phase 2**, update the active phase indicator in [GUIDE.md](./GUIDE.md) and append the milestone to [CHANGELOG.md](./CHANGELOG.md).

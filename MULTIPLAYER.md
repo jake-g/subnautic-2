@@ -1,4 +1,4 @@
-# Subnautica 2 Multiplayer
+# Subnautica 2 Multiplayer & Save Synchronization Guide
 
 Comprehensive operational guidelines, cloud synchronization semantics, and save hygiene protocols for **Subnautica 2** (Early Access Standalone / Unreal Engine 5).
 
@@ -6,30 +6,83 @@ Comprehensive operational guidelines, cloud synchronization semantics, and save 
 
 ## ☁️ Cloud Sharing Semantics
 
-The built-in cloud-share engine in *Subnautica 2* is an asynchronous **manual snapshot (copy/paste) utility**, not a live cloud synchronized lobby. Builds and world changes **will not automatically sync** across Steam accounts or separate gaming rigs in real time.
+The built-in cloud-share engine in *Subnautica 2* is an asynchronous **manual snapshot (copy/paste) utility**, not a live cloud-synchronized lobby. Builds and world changes **will not automatically sync** across Steam accounts or separate gaming rigs in real time.
 
-### Cloud Sharing Lifecycle
-1. **Host Export ("Upload to Cloud")**: Person A selects **"Upload to Cloud"** from the main menu. The server snapshots the active world tree and generates a unique one-time-use **8-digit share code**.
-2. **Guest Import ("Import Save")**: Person B inputs this 8-digit code via **"Import Save"**. Person B receives an exact, isolated local clone of Person A's world at that exact timestamp.
-3. **Isolated Progression**: Any subsequent habitat modules, vehicle assemblies, or resource gathering Person B performs solo exist **strictly on Person B's local machine**. Person A's save tree remains completely unaltered.
+### The "Pass the Torch" Visual Protocol
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Host as Host (Player A)
+    actor Guest as Guest (Player B)
+
+    Note over Host,Guest: 1. Initial Setup
+    Host->>Host: Plays game & builds starter base
+    Host->>Host: Main Menu: Selects "Upload to Cloud"
+    Host-->>Guest: Sends 8-Digit Share Code (e.g., 1234-5678)
+    Guest->>Guest: Main Menu: Selects "Import Save" and inputs Code
+    Note over Guest: Guest gets an exact clone of Host's world
+
+    Note over Host,Guest: 2. Active Gameplay (Solo/Co-op)
+    Host->>Host: Plays solo (Not recommended during Guest solo run)
+    Guest->>Guest: Plays solo, builds new modules & vehicles
+    Note over Guest: Progress is saved only on Guest's PC
+
+    Note over Host,Guest: 3. Pass the Torch (Syncing Back)
+    Guest->>Guest: Deposits all personal inventory into Wall Locker
+    Guest->>Guest: Saves & returns to Main Menu
+    Guest->>Guest: Selects "Upload to Cloud"
+    Guest-->>Host: Sends new 8-Digit Share Code
+    Host->>Host: Deposits all personal inventory into Wall Locker
+    Host->>Host: Main Menu: Selects "Import Save" and inputs Code
+    Note over Host: Host overwrites local save with Guest's progress
+```
 
 ---
 
-## 🔄 The "Pass the Torch" Synchronization Protocol
+## 📋 Step-by-Step Operations Checklist
 
-To merge guest progress or solo base expansions back to the primary world host:
-1. Person B saves their solo progress, returns to the main menu, and selects **"Upload to Cloud"** to generate a fresh 8-digit share code.
-2. Person B transmits this new code to Person A.
-3. Person A selects **"Import Save"** and inputs the fresh code, overwriting their older local save tree with Person B's progressed snapshot.
+Follow these steps exactly to progress a shared world without losing items or desyncing progress:
 
-> [!WARNING]
-> **Zero Branch Merging**: If Person A and Person B both play solo on diverged world copies simultaneously, their changes cannot be merged. Only one designated player should progress the primary save solo at any given time.
+### For the Active Builder (The "Torch-Holder")
+1. **Play and Progress**: Complete your gameplay session. Build rooms, gather resources, or craft vehicles.
+2. **Locker Drop (CRITICAL)**: Before saving, swim to your base and **deposit 100% of your inventory** (including equipped tools like the Scanner, Builder, Seaglide, and equipped gear like Fins/Tanks) into a designated base Wall Locker.
+3. **Save & Exit**: Save your game and exit to the main menu.
+4. **Generate Code**: Click **"Upload to Cloud"** on the save slot to get a new 8-digit share code.
+5. **Transmit Code**: Send the 8-digit code to the other player.
 
+### For the Receiving Player
+1. **Receive Code**: Wait for the active builder to send the new 8-digit code.
+2. **Locker Drop (CRITICAL)**: If you have an active local copy of the world, load it, deposit your entire inventory into a base Wall Locker, save, and return to the main menu.
+3. **Import Save**: Select **"Import Save"** from the main menu and input the 8-digit code.
+4. **Retrieve Gear**: Spawn in the world, swim to the base locker, retrieve your gear, and begin your session as the new Torch-Holder.
+
+---
+
+## ⚠️ Inventory Preservation Checklist
 > [!CAUTION]
-> **Early Access Inventory Reset Bug**: Importing cloud saves in Early Access frequently resets personal inventories or respawns player characters at the starter Emergency Lifepod. **Always deposit all gear, raw materials, and equipped hand tools into a base Wall Locker before uploading or importing cloud codes.**
+> **Early Access Inventory Reset Bug**
+> Cloud imports in the current Early Access build frequently reset personal inventories or respawn characters at the starter Emergency Lifepod with empty pockets. **Always deposit all gear, raw materials, and equipped hand tools into a base Wall Locker before uploading or importing cloud codes.**
+
+- [ ] **Hand Tools**: Scanner, Habitat Builder, Repair Tool, Laser Cutter.
+- [ ] **Equipped Gear**: High Capacity O₂ Tank, Fins, Rebreather, Compass.
+- [ ] **Quick-Slot Items**: Flashlight, Flares, Air Bladder.
+- [ ] **Resources**: Silver, Titanium, Copper, Quartz, and food/water.
 
 ---
 
-## 🛠️ Automated Community Background Daemons
+## 📁 Local Save Directory & Manual Backups
 
-For PC players seeking automated background cloud synchronization without manual 8-digit codes, third-party community background daemons such as [SaveSync](https://savesync.games) are commonly utilized across Steam Community and Reddit discussions to continuously mirror local Unreal Engine 5 save directories (`Saved/SaveGames`).
+If you want to perform manual file backups or inspect your saves:
+
+### Windows Save Path
+```text
+C:\Users\<Your-Username>\AppData\Local\Subnautica2\Saved\SaveGames\
+```
+* **Active Save File**: [savegame_1.sav](file:///C:/Users/jake/AppData/Local/Subnautica2/Saved/SaveGames/savegame_1.sav) (Slot 1)
+* **Backup Files**: `savegame_1_0.bak` through `savegame_1_9.bak` (automatically rotated by the engine)
+
+### Automated Backups (Using this Repository)
+You can use the local scraper toolkit in this repository to automate your save game backups:
+* **Pull Remote Saves**: Run `make pull` (or `python3 subnautica_scraper.py --pull`) to mirror all remote saves and configuration files into the local [backups/](file:///Users/jakegarrison/Downloads/projects/subnautica-2/backups) folder.
+* **Inspect Progression**: Run `make report` to decode the binary save file and compile a progress report in [REPORT.md](file:///Users/jakegarrison/Downloads/projects/subnautica-2/REPORT.md).
